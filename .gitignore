@@ -1,0 +1,13 @@
+# Emacs folders
+.emacs.d/.tutor/
+.emacs.d/elpa/
+.emacs.d/fonts/
+.emacs.d/server/
+.emacs.d/tmp/
+.emacs.d/transient/
+# Emacs files
+.emacs.d/bookmarks
+.emacs.d/config.el
+.emacs.d/network-security.data
+.emacs.d/places
+.emacs.d/recentf
