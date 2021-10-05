@@ -1,0 +1,7 @@
+[user]
+	name = Jarizleifr
+	email = antti.joutsi@gmail.com
+[core]
+	autocrlf = false
+[text]
+	eol = lf

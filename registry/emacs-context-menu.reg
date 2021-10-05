@@ -1,0 +1,19 @@
+Windows Registry Editor Version 5.00
+;; Replace {scoop_folder} with path to your scoop installation
+;; This is an annoying manual step, but needs to be run only once per install.
+[HKEY_CURRENT_USER\Software\Classes\*\shell]
+
+;; Open file in existing frame
+[HKEY_CURRENT_USER\Software\Classes\*\shell\emacsopencurrentframe]
+@="&Emacs: Edit in existing window"
+"icon"="{scoop_folder}\apps\emacs\current\bin\emacsclientw.exe"
+[HKEY_CURRENT_USER\Software\Classes\*\shell\emacsopencurrentframe\command]
+@="{scoop_folder}\apps\emacs\current\bin\emacsclientw.exe -n --alternate-editor=\"{scoop_folder}\apps\emacs\current\bin\runemacs.exe\" \"%1\""
+
+;; Open file in new frame
+[HKEY_CURRENT_USER\Software\Classes\*\shell\emacsopennewframe]
+@="&Emacs: Edit in new window"
+"icon"="{scoop_folder}\apps\emacs\current\bin\emacsclientw.exe"
+[HKEY_CURRENT_USER\Software\Classes\*\shell\emacsopennewframe\command]
+@="{scoop_folder}\apps\emacs\current\bin\emacsclientw.exe -n --alternate-editor=\"{scoop_folder}\apps\emacs\current\bin\runemacs.exe\" -c \"%1\""
+

@@ -1,0 +1,17 @@
+* Jarizleifr's configuration
+- Currently this setup is for Windows only, I might include alternative setups if I start using Linux more often.
+- Documentation for specific configurations can be found in respective folders.
+  - For example my Emacs config is quite elaborately documented
+** Requirements
+1. First install [[https://scoop.sh][Scoop]]
+2. Using Scoop, install the following apps:
+  - Git
+  - Cmder
+  - Emacs
+  - Autohotkey
+** Usage
+- Once the initial requirements are met:
+  - Clone this repository to a ~dotfiles~ folder in the user home folder
+  - Run ~setup.cmd~, the script will:
+    - Create symlinks for configurations
+    - Add contents of ~startup~ to Windows Startup
