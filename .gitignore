@@ -10,4 +10,10 @@
 .emacs.d/config.el
 .emacs.d/network-security.data
 .emacs.d/places
+.emacs.d/projectile.cache
+.emacs.d/projectile-bookmarks.eld
 .emacs.d/recentf
+
+# Manual utils folder (might contain licensed stuff so don't push to repo)
+utils/
+

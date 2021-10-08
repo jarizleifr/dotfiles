@@ -138,6 +138,17 @@ Minibuffer seems to work just fine out of the box.
   (expand-file-name "tmp/autosaves/sessions/" user-emacs-directory)
     auto-save-file-name-transforms `((".*" ,(expand-file-name "tmp/autosaves/" user-emacs-directory) t)))
 #+end_src
+* Project Management
+** Projectile and Helm
+#+begin_src elisp
+(use-package helm)
+(use-package projectile)
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(setq projectile-indexing-method 'alien)
+(use-package helm-projectile)
+(helm-projectile-on)
+#+end_src
 * GUI Tweaks
 ** Disable Menubar and Toolbar 
 #+begin_src elisp

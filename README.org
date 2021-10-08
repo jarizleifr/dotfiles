@@ -3,15 +3,44 @@
 - Documentation for specific configurations can be found in respective folders.
   - For example my Emacs config is quite elaborately documented
 ** Requirements
-1. First install [[https://scoop.sh][Scoop]]
-2. Using Scoop, install the following apps:
-  - Git
-  - Cmder
-  - Emacs
-  - Autohotkey
+*** 1. First install [[https://scoop.sh][Scoop]]
+*** 2. Using Scoop, install the following apps:
+**** Git
+- My preferred version control system.
+**** Cmder
+- Best terminal emulator for Windows, in my opinion. Comes with Monokai by default, which is my preferred color scheme anyway.
+**** Emacs
+- I cannot live without org-mode, so this is a necessity. I code with VS Code, but write longer texts with Emacs. My Emacs configuration is documented in ~.emacs.d\config.org~ as literal code
+**** fzf
+- This needs an extra workaround set in Cmder. Add this line to ~user_profile.cmd~:
+#+begin_example
+SET TERM=
+#+end_example
+- ~TERM~ is set to ~cygwin~ by default and Cmder relies on it for styling, but we can override it in user profile to ensure fzf works correctly AND we get cygwin styling.
+**** AutoHotkey
+- This is an oddball, but can replace many other utilities. Not a perfect solution to all problems, but works fine enough. 
+**** VDesk
+- Used for setting up shortcuts that open programs in specific virtual desktops.
+*** 3. Manual installs
+**** DesktopSwitcher
+- Add ~DesktopSwitcher.exe~ to dotfiles\utils 
+- This is similar to VDesk, but only switches virtual desktops. Windows by default lacks the ability to jump to a virtual desktop with a hotkey, but with VDesk we can create dummy shortcuts on task bar to use Windows native Win+1, Win+2, Win+3, etc. to jump to a specific desktop. Using this, we can make 10 jump-supported desktops (although I prefer to have fewer).
+- My pre-configured quick launch shortcuts can be found in ~quick-launch~. These probably will need to be added manually, so they go in right order.
 ** Usage
 - Once the initial requirements are met:
   - Clone this repository to a ~dotfiles~ folder in the user home folder
   - Run ~setup.cmd~, the script will:
     - Create symlinks for configurations
     - Add contents of ~startup~ to Windows Startup
+** Workflow and rationale
+*** 1. Startup
+- Initialize Emacs service so we can reuse the client
+- After OS has properly booted, run the startup.cmd. It opens a browser, a text editor and a terminal, all to their respective virtual desktops. This needs to be run separately, as VDesk can easily get confused if multiple programs get started at the same time on separate desktops. The batch file ensures a short timeout period between program starts. This is probably the best we can achieve on Windows.
+*** 2. Files
+- Use terminal or text editor. There shouldn't be any reason to use Explorer, as there are better tools. If you absolutely need that, you can get it from the terminal.
+*** 3. Moving between desktops
+** Improvements
+*** TODO Add Cmder configuration
+*** TODO Learn fzf
+** Open questions
+- Is Emacs context menu required? Ideally I never need to use the file explorer anyway.
