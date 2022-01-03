@@ -1,4 +1,17 @@
 * Jarizleifr's Emacs Config
+* Todo
+** TODO Elfeed keybindings
+- open with SPC E
+- move between posts with J and K?
+- how to filter via tags?
+** TODO Email?
+- the more I can do with Emacs the better?
+** TODO Figure out Ivy, Swiper etc.
+** TODO Projectile keybindings
+- open bookmarked project
+- fuzzy find files within project
+** TODO Column numbers 
+** TODO Rainbow delimiters
 * Initial setup
 ** Package management
 *** Setup package.el and MELPA
@@ -26,7 +39,7 @@
 (use-package evil-collection
   :after evil
   :config
-  (setq evil-collection-mode-list '(dashboard dired bookmark ibuffer))
+  (setq evil-collection-mode-list '(dashboard dired bookmark ibuffer elfeed))
   (evil-collection-init))
 (use-package evil-tutor)
 #+end_src
@@ -227,12 +240,41 @@ Minibuffer seems to work just fine out of the box.
   :after ivy
   :config (counsel-mode))
 #+end_src
+
+
 * Git integration
 #+begin_src elisp 
 (use-package magit)
 #+end_src
 * Language support
 #+begin_src elisp
-(use-package lsp-mode)
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((csharp-mode . lsp)
+         (python-mode . lsp)
+         (typescript-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
 (use-package csharp-mode)
+(use-package lsp-pyright)
+(use-package typescript-mode)
+
+(use-package company
+  :ensure t
+  :config
+  ;; Optionally enable completion-as-you-type behavior.
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1))
+#+end_src
+
+* Editor config for languages
+#+begin_src elisp
+(use-package editorconfig
+  :config (editorconfig-mode 1))
+
+(defun jzlfr-csharp-mode-hook ()
+  (electric-pair-local-mode 1))
+
+(add-hook 'csharp-mode-hook 'jzlfr-csharp-mode-hook)
 #+end_src
