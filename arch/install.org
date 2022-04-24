@@ -1,0 +1,124 @@
+* Arch Linux installation
+
+
+  
+** Load finnish keyboard layout
+#+begin_src
+loadkeys fi
+#+end_src
+
+** Verify boot mode
+#+begin_src
+ls /sys/firmware/efi/efivars
+#+end_src
+
+** Check for internet connection
+#+begin_src bash
+ip link
+
+# For wireless
+iwctl
+device list
+station {device} scan
+station {device} get-networks
+station {device} connect {SSID}
+
+# Test with
+ping archlinux.org
+#+end_src
+
+** Setup system clock
+#+begin_src bash
+timedatectl set-ntp true
+timedatectl set-timezone Europe/Helsinki
+timedatectl status # Verify that clock is correct
+#+end_src
+
+** Partitioning
+- Using my Asus laptop with 2x320GB HDD as an example setup with UEFI
+| partition | type      | mount point | size  |
+|-----------+-----------+-------------+-------|
+| /dev/sda1 | EFI FAT32 | /boot/efi   | 550MB |
+| /dev/sda2 | Linux     | /mnt        | rest  |
+| /dev/sdb1 | Swap      | /swap       | 8GB   |
+| /dev/sdb2 | Linux     | /home       | rest  |
+
+- Use chdisk for easy partitioning, cgdisk for GPT
+#+begin_src bash
+fdisk -l # list partitions
+
+chdisk /dev/sda 
+chdisk /dev/sdb
+#+end_src
+
+*** Format partitions
+#+begin_src
+mkfs.ext4 /dev/sda2
+mkfs.ext4 /dev/sdb2
+mkswap /dev/sdb1
+mkfs.fat -F 32 /dev/sda1
+#+end_src
+
+*** Mount file systems
+#+begin_src
+mount /dev/sda2 /mnt
+mount /dev/sdb2 /home
+
+mkdir /boot/efi
+mount /dev/sda1 /boot/efi
+
+swapon /dev/sdb1
+#+end_src
+
+** Install essential packages
+#+begin_src
+pacstrap /mnt base linux linux-firmware
+#+end_src
+
+** Install other necessary packages
+#+begin_src bash
+man-db
+man-pages
+texinfo
+
+e2fsprogs # ext4 userspace utilities
+iwd # wireless daemon (arch installer uses this)
+emacs # because
+#+end_src
+
+** System configuration
+
+*** Generate fstab
+#+begin_src
+genfstab -U /mnt >> /mnt/etc/fstab
+#+end_src
+
+*** Root
+#+begin_src
+arch-chroot /mnt
+#+end_src
+
+*** Generate locale
+
+
+*** Hosts / Hostname
+#+begin_src bash
+echo {hostname} > etc/hostname
+emacs etc/hosts
+
+# add this to hosts
+# 127.0.0.1  localhost
+# ::1        localhost
+# 127.0.1.1  {hostname}
+#+end_src
+
+
+*** Set local time
+ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
+hwclock --
+
+*** Set root password
+passwd
+
+** Finishing up
+   

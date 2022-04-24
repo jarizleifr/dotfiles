@@ -1,0 +1,71 @@
+* My personal color scheme
+
+
+** Text - snow-white #fffafa
+   
+a bit reddish off-white. For body text.
+  
+** Primary - purple #
+
+Selections, active title bars, anything that denotes something that is currently under scrutiny.
+Purple is my favorite color, and I want it to symbolise something that I am currently exerting my mental energy towards.
+
+** Secondary - toxic gren #
+
+Use this on rare occasion. It has a nice ring when placed close to the primary purples.
+
+** Surface - bluish dark grey #252428
+
+Use this for windows, buttons, typical UI elements
+   
+** Background - black #000000
+
+I like dark modes and I like the void. Use this for lowered places, large backgrounds and stuffs like inputs.
+
+** Utility colors
+
+*** Grey #9f9f9f
+
+Disabled, de-emphasized
+    
+*** Orange
+
+For links, travelling to other places, exotics
+    
+*** 
+
+
+* Terminal
+
+- Purple is indeed very hard to read. I think I need to omit it for readability's sake. Monokai uses red, orange, yellow, green, cyan and mauve
+
+- use css just for color previews
+#+begin_src css
+bg : #252428
+fg : #fffafa
+
+0  : #000000
+8  : #505048
+
+1  : #e03838
+9  : #e03838
+
+2  : #a0d040
+10 : #a0d040
+
+3  : #ffe0a0
+11 : #ffe0a0
+
+4  : #9048f0
+12 : #9048f0
+
+5  : #f068b0
+13 : #f068b0
+
+6  : #28a0ff
+14 : #28a0ff
+
+7  : #b8a8c8
+15 : #fffafa
+#+end_src
+

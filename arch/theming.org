@@ -1,0 +1,8 @@
+* Using .Xresources
+
+- urxvt :: Works out of the box
+- Emacs :: Requires "xresources-theme" to work
+
+- Adwaita theme :: Requires custom parsing (convert colors into SCSS variables)
+- Openbox :: Requires custom parsing, can include entire configuration in .Xresources, then use that to generate actual ob config
+- Tint2 :: Requires custom parsing, same as openconfig, make the entire config in xresources and convert it.
