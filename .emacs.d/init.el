@@ -4,8 +4,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("1436985fac77baf06193993d88fa7d6b358ad7d600c1e52d12e64a2f07f07176" default))
  '(package-selected-packages
-   '(typescript-mode editorconfig lsp-python-ms lsp-pyright company elfeed helm-projectile helm projectile magit org-habit org-journal peep-dired dired-open all-the-icons-dired doom-modeline which-key general evil-tutor evil-collection use-package monokai-theme evil elisp-format dired-sidebar dashboard)))
+   '(dracula-theme typescript-mode editorconfig lsp-python-ms lsp-pyright company elfeed helm-projectile helm projectile magit org-habit org-journal peep-dired dired-open all-the-icons-dired doom-modeline which-key general evil-tutor evil-collection use-package monokai-theme evil elisp-format dired-sidebar dashboard)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

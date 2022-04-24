@@ -80,22 +80,17 @@ Minibuffer seems to work just fine out of the box.
   :font "Fira Code Regular-9")
 (add-to-list 'default-frame-alist '(font . "Fira Code Regular-9" )) ; Needed for emacsclient
 #+end_src
-** Use Monokai theme
+** Use Dracula theme
 #+begin_src elisp
 (add-hook 'after-init-hook (lambda () 
-  (load-theme 'monokai t)))
-(setq monokai-use-variable-pitch nil)
-(setq monokai-height-minus-1 1.0
-      monokai-height-plus-1 1.0
-      monokai-height-plus-2 1.0
-      monokai-height-plus-3 1.0
-      monokai-height-plus-4 1.0)
+  (load-theme 'dracula t)))
+(setq dracula-enlarge-headings nil)
 #+end_src
-*** Extra Monokai colors for Evil mode states
+*** Extra colors for Evil mode states
 #+begin_src elisp
 (setq evil-normal-state-cursor '(box "#F8F8F2")
-      evil-insert-state-cursor '(box "#A6E22E")
-      evil-visual-state-cursor '(box "#FD971F"))
+      evil-insert-state-cursor '(box "#50FA7B")
+      evil-visual-state-cursor '(box "#FFB86C"))
 #+end_src
 *** All the icons
 #+begin_src elisp
@@ -122,7 +117,7 @@ Minibuffer seems to work just fine out of the box.
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 #+end_src
 * Files
-** Dired
+** Dired & buffers
 #+begin_src elisp
 (use-package all-the-icons-dired)
 (use-package dired
@@ -138,6 +133,7 @@ Minibuffer seems to work just fine out of the box.
 (nvmap :keymaps 'override :prefix "SPC"
        "d d"   '(dired :which-key "Open dired")
        "d j"   '(dired-jump :which-key "Open dired in current file path")
+       "i"     '(ibuffer :which-key "Open ibuffer")
 )
 #+end_src
 ** Backups, Auto-Save
@@ -195,12 +191,17 @@ Minibuffer seems to work just fine out of the box.
   (add-to-list 'org-modules 'org-habit t)
 )
 #+end_src
-** Habit tracking
+**  Habit tracking
 *** TODO Fix habit graph showing for all days 
 #+begin_src elisp
 (setq org-habit-graph-column 65)
 (setq org-habit-show-habits-only-for-today nil)
 (setq org-habit-show-all-today t)
+(use-package org-habit
+  :ensure nil)
+(use-package org-tempo
+  :ensure nil)
+(setq org-modules '(org-tempo org-habit))
 #+end_src   
 ** Agenda
 - Setup files included in agenda
@@ -211,7 +212,7 @@ Minibuffer seems to work just fine out of the box.
                              (expand-file-name "work.org"    org-directory)))
 (setq org-agenda-window-setup 'current-window)
 #+end_src
-** Keybindings
+** Org keybindings
 #+begin_src elisp
 (nvmap :keymaps 'override :prefix "SPC"
        "o a"    '(org-agenda :which-key "Open org agenda")
@@ -219,11 +220,6 @@ Minibuffer seems to work just fine out of the box.
        "o j n"  '(org-journal-new-entry :which-key "New journal entry")
        "o c"    '(org-capture :which-key "Capture org note")
 )
-#+end_src
-** Source Code Block Tag Expansion
-#+begin_src elisp
-(use-package org-tempo
-  :ensure nil)
 #+end_src
 ** Source Code Block Syntax Highlighting
 #+begin_src elisp
@@ -234,13 +230,25 @@ Minibuffer seems to work just fine out of the box.
       org-edit-src-content-indentation 0
 )
 #+end_src
+* RSS Feeds
+#+begin_src elisp
+(use-package elfeed
+  :config
+  (setq elfeed-feeds (quote (
+       ("https://feeds.yle.fi/uutiset/v1/majorHeadlines/YLE_UUTISET.rss" news)
+       ("https://en.wikipedia.org/w/api.php?action=featuredfeed&feed=featured&feedformat=rss" wikipedia)))))
+(nvmap :keymaps 'override :prefix "SPC"
+       "e"      '(elfeed :which-key "Open elfeed"))
+(setq elfeed-show-mode-hook
+      (lambda ()
+	(set-face-attribute 'variable-pitch (selected-frame) :font "Tahoma-12")))
+#+end_src
 * Code completion
 #+begin_src elisp
 (use-package counsel
   :after ivy
   :config (counsel-mode))
 #+end_src
-
 
 * Git integration
 #+begin_src elisp 
@@ -252,13 +260,9 @@ Minibuffer seems to work just fine out of the box.
   :init
   (setq lsp-keymap-prefix "C-c l")
   :hook ((csharp-mode . lsp)
-         (python-mode . lsp)
-         (typescript-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package csharp-mode)
-(use-package lsp-pyright)
-(use-package typescript-mode)
 
 (use-package company
   :ensure t
