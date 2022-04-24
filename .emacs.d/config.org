@@ -2,11 +2,9 @@
 * Todo
 ** TODO Elfeed keybindings
 - open with SPC E
-- move between posts with J and K?
 - how to filter via tags?
 ** TODO Email?
 - the more I can do with Emacs the better?
-** TODO Figure out Ivy, Swiper etc.
 ** TODO Projectile keybindings
 - open bookmarked project
 - fuzzy find files within project
@@ -39,7 +37,7 @@
 (use-package evil-collection
   :after evil
   :config
-  (setq evil-collection-mode-list '(dashboard dired bookmark ibuffer elfeed))
+  (setq evil-collection-mode-list '(dashboard dired bookmark ibuffer elfeed magit))
   (evil-collection-init))
 (use-package evil-tutor)
 #+end_src
@@ -62,7 +60,7 @@ Minibuffer seems to work just fine out of the box.
 #+begin_src elisp 
 ;; General
 (nvmap :states 'normal :keymaps 'override :prefix "SPC"
-       "SPC"   '(counsel-M-x :which-key "M-x"))
+       "SPC"   '(helm-M-x :which-key "M-x"))
 ;; Buffers and bookmarks
 (nvmap :states 'normal :keymaps 'override :prefix "SPC"
        "b"     '(bookmark-bmenu-list :which-key "Open bookmarks"))
@@ -219,7 +217,9 @@ Minibuffer seems to work just fine out of the box.
        "o j j"  '(org-journal-open-current-journal-file :which-key "Open current journal file")
        "o j n"  '(org-journal-new-entry :which-key "New journal entry")
        "o c"    '(org-capture :which-key "Capture org note")
-)
+       "t w"    '((lambda () (interactive) (org-timer-set-timer 50)) :which-key "Set timer to WORK (50 min)") 
+       "t b"    '((lambda () (interactive) (org-timer-set-timer 10)) :which-key "Set timer to BREAK (10 min)") 
+       "t p"    '(org-timer-pause-or-continue :which-key "Pause or continue timer"))
 #+end_src
 ** Source Code Block Syntax Highlighting
 #+begin_src elisp
@@ -227,8 +227,7 @@ Minibuffer seems to work just fine out of the box.
       org-src-tabs-acts-natively t
       org-src-preserve-indentation t
       org-confirm-babel-evaluate nil
-      org-edit-src-content-indentation 0
-)
+      org-edit-src-content-indentation 0)
 #+end_src
 * RSS Feeds
 #+begin_src elisp
@@ -243,16 +242,18 @@ Minibuffer seems to work just fine out of the box.
       (lambda ()
 	(set-face-attribute 'variable-pitch (selected-frame) :font "Tahoma-12")))
 #+end_src
-* Code completion
+* Shell
+Set shell to use cmder settings
 #+begin_src elisp
-(use-package counsel
-  :after ivy
-  :config (counsel-mode))
+(setq explicit-shell-file-name (substitute-in-file-name "$SYSTEMROOT/System32/cmd.exe")) 
+(setq shell-file-name "cmd")
+(setq explicit-cmd.exe-args '("/k %ConEmuDir%/../init.bat"))
 #+end_src
-
 * Git integration
 #+begin_src elisp 
 (use-package magit)
+(nvmap :keymaps 'override :prefix "SPC"
+  "m"    '(magit :which-key "Open magit"))
 #+end_src
 * Language support
 #+begin_src elisp
