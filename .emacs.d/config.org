@@ -1,4 +1,4 @@
- #+TITLE:Jarizleifr's Emacs Config
+#+TITLE:Jarizleifr's Emacs Config
 * Initial setup
 ** Package management
 Most packages come from MELPA package repository, so the first thing is to plug our Emacs into there.
@@ -49,18 +49,22 @@ Evil collection provides some extra keybindings for other plugins, making everyt
   :ensure t
   :after evil
   :config
-  (setq evil-collection-mode-list '(dashboard dired bookmark ibuffer elfeed magit))
+  (setq evil-collection-mode-list '(dashboard helm dired bookmark ibuffer elfeed magit))
   (evil-collection-init))
 #+end_src
 
 ** General
-General provides a nice way to configure keybindings with a =:general= keyword and mapping functions like =imap=, =nvmap=, representing the different evil states where the bindings are active.
+General provides a nice way to configure ~evil~-compatible keybindings with a ~:general~ keyword and mapping functions like ~imap~, ~nvmap~, representing the different evil states where the bindings are active.
+
+Also, bind ~ö~ to Vim ex commands and ~ä~ to forward search while in normal mode, as I'm using a FI keyboard layout, and these small changes makes saving and searching much more convenient.
 
 #+begin_src elisp
 (use-package general
   :ensure t
   :config
   (general-evil-setup t))
+(general-def 'normal "ö" 'evil-ex)
+(general-def 'normal "ä" 'evil-search-forward)
 #+end_src
 
 ** Which key
@@ -80,8 +84,9 @@ Helm is a framework for incremental completions and narrowing down selections. I
 #+begin_src elisp
 (use-package helm
   :ensure t
+  :hook ((helm-major-mode-hook . (lambda () (setq auto-composition-mode nil))))
   :general
-  (nvmap :prefix "SPC"
+  (nvmap :keymaps 'override :prefix "SPC"
          "SPC"   '(helm-M-x :which-key "Command")
          "b"     '(helm-buffers-list :which-key "Buffers")
          "s"     '(helm-bookmarks :which-key "Bookmarks")
@@ -98,6 +103,25 @@ There are few keybindings that don't relate to any of the packages, so we'll kee
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 #+end_src 
+
+** Disable far keys
+I tend to use arrow keys and home/end/del/pgup/pgdn as a crutch and I want to learn out of this behavior. So we'll disable the offending keys and display a message instead.
+#+begin_src elisp
+(defun vi-keys-notification ()
+  (interactive)
+  (message "Use HJKL to move cursor"))
+(general-def '(normal visual insert) "<up>" 'vi-keys-notification)
+(general-def '(normal visual insert) "<down>" 'vi-keys-notification)
+(general-def '(normal visual insert) "<left>" 'vi-keys-notification)
+(general-def '(normal visual insert) "<right>" 'vi-keys-notification)
+
+(general-def '(normal visual insert) "<deletechar>" (lambda () (interactive) (message "Use x to delete character")))
+(general-def '(normal visual insert) "<insert>" (lambda () (interactive) (message "Use i to insert character")))
+(general-def '(normal visual insert) "<home>" (lambda () (interactive) (message "Use 0 or ^ (S-4) to return cursor")))
+(general-def '(normal visual insert) "<end>" (lambda () (interactive) (message "Use $ (M-4) to move cursor to the end")))
+(general-def '(normal visual insert) "<prior>" (lambda () (interactive) (message "Use (C-B) to go backwards")))
+(general-def '(normal visual insert) "<next>" (lambda () (interactive) (message "Use (C-F) to go forwards")))
+#+end_src
 
 * Theming
 ** Base16
@@ -239,13 +263,19 @@ Projectile is a project interaction library, which makes dealing with complex pr
   :general
   (nvmap :prefix "SPC"
          "p p"   '(projectile-find-file :which-key "Find files in project")
+         "p f"   '(helm-projectile-ag :which-key "Search in project")
          "p t"   '(projectile-toggle-between-implementation-and-test :which-key "Toggle between implementation and test")))
 (use-package helm-projectile
   :ensure t
   :config
   (helm-projectile-on))
 #+end_src
-
+** File search
+#+begin_src elisp
+(use-package helm-ag :ensure t)
+(use-package ripgrep :ensure t)
+(use-package rg :ensure t)
+#+end_src
 * Org-mode
 Org-mode is pretty much the number one reason for why I use Emacs in the first place.
 
@@ -312,6 +342,7 @@ Setup directories and other general configuration and load up org-habit module.
 (require 'ox)
 (require 'ox-html)
 #+end_src
+
 * RSS Feeds
 #+begin_src elisp
 (use-package elfeed
@@ -320,7 +351,7 @@ Setup directories and other general configuration and load up org-habit module.
   (setq elfeed-feeds (quote (("https://feeds.yle.fi/uutiset/v1/majorHeadlines/YLE_UUTISET.rss" news)
                              ("https://en.wikipedia.org/w/api.php?action=featuredfeed&feed=featured&feedformat=rss" wikipedia))))
   (nvmap :keymaps 'override :prefix "SPC"
-	 "e"      '(elfeed :which-key "Open elfeed")))
+	 "f"      '(elfeed :which-key "Open elfeed")))
   (setq elfeed-show-mode-hook
 	(lambda ()
 	  (set-face-attribute 'variable-pitch (selected-frame) :font "Tahoma-12")))
@@ -334,6 +365,7 @@ My first idea was to put the entire shims folder in front of the ~PATH~, but tha
 #+begin_src elisp
 (setenv "PATH" (concat (substitute-in-file-name "$SCOOP/apps/findutils/current/bin;") (getenv "PATH")))
 #+end_src
+
 * Programming
 
 ** Git integration (Magit)
@@ -372,7 +404,11 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 	 (nxml-mode   . eglot-ensure))
   :config
   (add-to-list 'eglot-server-programs '(csharp-mode "D:/scoop/apps/omnisharp/current/omnisharp.exe" "-lsp"))
-  (add-to-list 'eglot-server-programs '(nxml-mode "lemminx")))
+  (add-to-list 'eglot-server-programs '(nxml-mode "lemminx"))
+  :general
+  (nvmap :prefix "SPC"
+	       "e f"   '(eglot-format :which-key "Eglot format")
+	       "e r"   '(eglot-rename :which-key "Eglot rename")))
 #+end_src
 
 ** Auto-completion
@@ -388,3 +424,11 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
          (nxml-mode   . company-mode)))
 #+end_src
 
+~yasnippet~ lets you configure your own custom snippets, so you don't need to write boilerplate code.
+#+begin_src elisp
+(use-package yasnippet
+  :ensure t
+  :config
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (yas-global-mode 1))
+#+end_src

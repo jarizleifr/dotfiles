@@ -4,6 +4,7 @@
 (defvar default-gc-cons-threshold 134217728)
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6) 
+(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold default-gc-cons-threshold)))
 
 ;; Prevent flashing of white background (value from skeletor theme)
 (set-face-attribute 'default nil :background "#2a1b36" :foreground "#d7ceef")
