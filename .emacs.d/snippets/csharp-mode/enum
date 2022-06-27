@@ -1,10 +1,9 @@
 # -*- mode: snippet -*-
 # contributor: jarizleifr <antti.joutsi@gmail.com>
-# name: C# for loop 
-# key: for 
+# name: C# enum 
+# key: enum 
 # --
 
-for (int i = 0; i < ${1:bounds}; i++) {
+public enum ${1:EnumName} {
   $0
 }
-

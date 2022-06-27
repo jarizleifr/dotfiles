@@ -1,10 +1,9 @@
 # -*- mode: snippet -*-
 # contributor: jarizleifr <antti.joutsi@gmail.com>
-# name: C# for loop 
-# key: for 
+# name: C# else if 
+# key: elseif 
 # --
 
-for (int i = 0; i < ${1:bounds}; i++) {
+else if (${1:condition}) {
   $0
 }
-

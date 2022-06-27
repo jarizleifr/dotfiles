@@ -9,7 +9,7 @@
  '(helm-minibuffer-history-key "M-p")
  '(ignored-local-variable-values '((projectile-run-project . "echo hello world")))
  '(package-selected-packages
-   '(yasnippet helm-ag ox-html ox htmlize json-rpc per-buffer-theme per-mode-buffer base16-theme ## which-key use-package org-journal magit helm-projectile general evil-collection eval-in-repl ess elfeed eglot editorconfig dracula-theme doom-modeline dashboard csharp-mode company all-the-icons-dired))
+   '(rust-mode aggressive-indent aggressive-indent-mode yasnippet helm-ag ox-html ox htmlize json-rpc per-buffer-theme per-mode-buffer base16-theme ## which-key use-package org-journal magit helm-projectile general evil-collection eval-in-repl ess elfeed eglot editorconfig dracula-theme doom-modeline dashboard csharp-mode company all-the-icons-dired))
  '(safe-local-variable-values
    '((projectile-related-files-fn list
 				  (projectile-related-files-fn-extensions :other

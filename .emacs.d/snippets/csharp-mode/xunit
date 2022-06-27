@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# contributor: jarizleifr <antti.joutsi@gmail.com>
+# name: C# Xunit test
+# key: xunit
+# --
+
+using Xunit;
+
+namespace $1 {
+  public class ${2:Class}Tests {
+
+    [Fact]
+    public void ${3:TestMethod}() {
+      $0
+    }  
+  }
+}

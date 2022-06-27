@@ -33,11 +33,12 @@ Evil mode provides Vim-keybindings for Emacs, making it immediately feel much mo
   :ensure t
   ;; Setup evil-mode in init, as these options change how package is loaded.
   :init
-  (setq evil-want-C-i-jump nil)
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-vsplit-window-right t)
-  (setq evil-split-window-below t)
+  (setq evil-want-C-i-jump nil
+	    evil-undo-system 'undo-redo
+        evil-want-integration t
+	    evil-want-keybinding nil
+        evil-vsplit-window-right t
+        evil-split-window-below t)
   (evil-mode))
 #+end_src
 
@@ -49,7 +50,7 @@ Evil collection provides some extra keybindings for other plugins, making everyt
   :ensure t
   :after evil
   :config
-  (setq evil-collection-mode-list '(dashboard helm dired bookmark ibuffer elfeed magit))
+  (setq evil-collection-mode-list '(dashboard helm dired bookmark ibuffer magit xref))
   (evil-collection-init))
 #+end_src
 
@@ -68,7 +69,7 @@ Also, bind ~ö~ to Vim ex commands and ~ä~ to forward search while in normal mo
 #+end_src
 
 ** Which key
-=which-key= can be used to grant descriptions to custom keybindings, which are then shown whenever looking for commands, improving discoverability.
+~which-key~ can be used to grant descriptions to custom keybindings, which are then shown whenever looking for commands, improving discoverability.
 
 #+begin_src elisp
 (use-package which-key
@@ -98,7 +99,7 @@ There are few keybindings that don't relate to any of the packages, so we'll kee
 
 #+begin_src elisp 
 (nvmap :prefix "SPC"
-       "r"     '((lambda () (interactive) (load-file "~/.emacs.d/init.el")) :which-key "Reload Emacs config"))
+       "r"     '((lambda () (interactive) (load-file "~/.emacs.d/init.el")) :which-key "Reload emacs config"))
 ;; Increase/decrease text size with a keyboard command
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -125,7 +126,7 @@ I tend to use arrow keys and home/end/del/pgup/pgdn as a crutch and I want to le
 
 * Theming
 ** Base16
-I use the Base16 theme system, with a custom theme, designed by yours truly. Base16 doesn't by default have colors for evil-mode state cursors, so lets override a few colors as well.
+I use the Base16 theme system, with a custom theme, designed by yours truly. Base16 doesn't by default have colors for evil-mode state cursors, so let's add some simple overrides. We get the colors dynamically from the current theme variable set in previous block, so this works nicely even if you want to change themes.
 
 #+begin_src elisp
 (use-package base16-theme
@@ -189,7 +190,13 @@ Org-mode is my main authoring tool whenever I'm not writing code, so I want it t
 Include Doom Emacs modeline (status bar), which looks nice. Doom modeline requires the all-the-icons package, so make sure it's installed as well.
 
 #+begin_src elisp 
-(use-package all-the-icons :ensure t)
+(use-package all-the-icons
+  :ensure t)
+(use-package all-the-icons-dired
+  :ensure t
+  :after all-the-icons
+  :config
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
 (use-package doom-modeline
   :ensure t
   :init
@@ -218,13 +225,31 @@ Dashboard is the first thing you see when you start Emacs. I'll include some rec
   (setq dashboard-items '((projects  . 5)
 			   (bookmarks . 5)
 			   (recents   . 5)
-                          (agenda    . 5)))
+                         (agenda    . 5)))
   :config
   (dashboard-setup-startup-hook))
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 #+end_src
 
 * Files
+** Dired
+Dired is the Emacs directory explorer. In general, it's better to use fuzzy find and searches to get what you're looking for, but sometimes it's useful to get a clear view of the directory structure.
+#+begin_src elisp
+(use-package dired
+  :ensure nil
+  :commands (dired dired-jump)
+  :hook (dired-mode . (lambda () (dired-hide-details-mode 1)))
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h" 'dired-single-up-directory
+    "l" 'dired-single-buffer)
+  :custom ((dired-listing-switches "-agho --group-directories-first"))
+  :general
+  (nvmap :prefix "SPC"
+         "d d"   '(dired :which-key "Dired")
+         "d j"   '(dired-jump :which-key "Dired Jump")))
+#+end_src
+
 ** Backups, Auto-Save
 Emacs clutters folders quite profusely with backup and temp files, this'll stuff all backup and autosave data to .emacs.d instead.
 
@@ -243,6 +268,10 @@ Emacs clutters folders quite profusely with backup and temp files, this'll stuff
 Projectile is a project interaction library, which makes dealing with complex projects a breeze. One can for example build, run and test projects by providing a configuration. I'm using Helm as my finder, so helm-projectile is setup here as well, which provides some glue between the two libraries.
 
 #+begin_src elisp
+(defun jzlfr/projectile-project-find-function (dir)
+  (let ((root (projectile-project-root dir)))
+    (and root (cons 'transient root))))
+
 (use-package projectile
   :ensure t
   :config
@@ -256,6 +285,8 @@ Projectile is a project interaction library, which makes dealing with complex pr
   (projectile-global-mode)
   ;; Make projectile variables in .dir-locals.el safe
   (put 'projectile-test-suffix-function 'safe-local-variable #'functionp)
+  ;;(with-eval-after-load 'project
+  ;;  (add-to-list 'project-find-functions 'jzlfr/projectile-project-find-function))
   :bind
   (("<f5>" . projectile-run-project)
    ("<f6>" . projectile-test-project)
@@ -273,8 +304,6 @@ Projectile is a project interaction library, which makes dealing with complex pr
 ** File search
 #+begin_src elisp
 (use-package helm-ag :ensure t)
-(use-package ripgrep :ensure t)
-(use-package rg :ensure t)
 #+end_src
 * Org-mode
 Org-mode is pretty much the number one reason for why I use Emacs in the first place.
@@ -292,24 +321,24 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
 	 org-hide-leading-stars t
 	
 	 ;; org-agenda
-        org-agenda-window-setup 'current-window
+       org-agenda-window-setup 'current-window
 	 org-agenda-files (list (expand-file-name "journal.org" org-directory)
                                (expand-file-name "habits.org"  org-directory)
                                (expand-file-name "work.org"    org-directory))
 
 	 ;; Org source block config
 	 org-src-fontify-natively t
-        org-src-tabs-acts-natively t
-        org-src-preserve-indentation t
-        org-edit-src-content-indentation 0
+       org-src-tabs-acts-natively t
+       org-src-preserve-indentation t
+       org-edit-src-content-indentation 0
 
 	 ;; Org modules
-        org-modules '(org-habit org-tempo)
+       org-modules '(org-habit org-tempo)
 
 	 ;; org-habit 
 	 org-habit-graph-column 65
-        org-habit-show-habits-only-for-today nil
-        org-habit-show-all-today t)
+       org-habit-show-habits-only-for-today nil
+       org-habit-show-all-today t)
   :general
   (nvmap :prefix "SPC"
          "o a"   '(org-agenda :which-key "Open org agenda")
@@ -343,27 +372,16 @@ Setup directories and other general configuration and load up org-habit module.
 (require 'ox-html)
 #+end_src
 
-* RSS Feeds
-#+begin_src elisp
-(use-package elfeed
-  :ensure t
-  :config
-  (setq elfeed-feeds (quote (("https://feeds.yle.fi/uutiset/v1/majorHeadlines/YLE_UUTISET.rss" news)
-                             ("https://en.wikipedia.org/w/api.php?action=featuredfeed&feed=featured&feedformat=rss" wikipedia))))
-  (nvmap :keymaps 'override :prefix "SPC"
-	 "f"      '(elfeed :which-key "Open elfeed")))
-  (setq elfeed-show-mode-hook
-	(lambda ()
-	  (set-face-attribute 'variable-pitch (selected-frame) :font "Tahoma-12")))
-#+end_src
-
 * Extended shell commands
 Some functionality (like ~projectile~'s find commands) requires unix commands, which while can be installed on Windows, are usually overridden by Windows-specific commands. Here we add GNU findutils added by ~Scoop~ to the front of the ~PATH~ environment variable, to make sure that we default to our installed tools, instead of Windows tools.
 
 My first idea was to put the entire shims folder in front of the ~PATH~, but that breaks C# language server Omnisharp, which no longer finds SDK for .NET.
 
 #+begin_src elisp
-(setenv "PATH" (concat (substitute-in-file-name "$SCOOP/apps/findutils/current/bin;") (getenv "PATH")))
+(setenv "PATH" (concat
+		(substitute-in-file-name "$SCOOP/apps/findutils/current/bin;")
+		(substitute-in-file-name "$SCOOP/apps/coreutils/current/bin;")
+		(getenv "PATH")))
 #+end_src
 
 * Programming
@@ -377,20 +395,34 @@ My first idea was to put the entire shims folder in front of the ~PATH~, but tha
          "m"      '(magit :which-key "Magit")))
 #+end_src
 
-** Basic formatting (editorconfig)
+** Formatting
 #+begin_src elisp
   (use-package editorconfig
   :ensure t
   :config (editorconfig-mode 1))
 #+end_src
 
+#+begin_src elisp
+(use-package aggressive-indent
+  :ensure t) 
+#+end_src
+
 ** Advanced language support
+*** Rust
+#+begin_src elisp
+(use-package rust-mode
+  :ensure t)
+#+end_src
 *** C#
 #+begin_src elisp
-(use-package csharp-mode :ensure t)
+(use-package csharp-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.csx\\'" . csharp-mode))
+  :hook (csharp-mode . aggressive-indent-mode))
 #+end_src
 *** XML
-=nxml-mode= is included in Emacs by default, but it needs to be setup for XML Schema Definition files.
+~nxml-mode~ is included in Emacs by default, but it needs to be setup for XML Schema Definition files.
 #+begin_src elisp
 (add-to-list 'auto-mode-alist '("\\.xsd\\'" . nxml-mode))
 #+end_src
@@ -408,22 +440,24 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
   :general
   (nvmap :prefix "SPC"
 	       "e f"   '(eglot-format :which-key "Eglot format")
+	       "e q"   '(eglot-code-action-quickfix :which-key "Eglot quick fix")
+	       "e a"   '(eglot-code-actions :which-key "Eglot code actions")
+	       "e o"   '(eglot-code-action-organize-imports :which-key "Eglot organize imports")
 	       "e r"   '(eglot-rename :which-key "Eglot rename")))
 #+end_src
 
-** Auto-completion
-=company= is a text completion framework, which will give symbol suggestions as you write code.
+** Programming helpers
 
+*** Keybindings
 #+begin_src elisp
-(use-package company
-  :ensure t
-  :config
-  (setq company-idle-delay 0
-	company-minimum-prefix-length 1)
-  :hook ((csharp-mode . company-mode)
-         (nxml-mode   . company-mode)))
+(nvmap :prefix "SPC"
+       "c c"   '(comment-line :which-key "Comment line")
+       "c r"   '(comment-region :which-key "Comment region")
+       "f p"   '(flymake-goto-prev-error :which-key "Goto previous error")
+       "f n"   '(flymake-goto-next-error :which-key "Goto next error"))
 #+end_src
 
+*** YASnippet
 ~yasnippet~ lets you configure your own custom snippets, so you don't need to write boilerplate code.
 #+begin_src elisp
 (use-package yasnippet
@@ -431,4 +465,27 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
   :config
   (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-global-mode 1))
+#+end_src
+
+*** Company-mode
+~company~ is a text completion framework, which will give symbol suggestions as you write code. ~company~ doesn't play nice with ~yasnippet~ out of the box, so we'll need to give it a little help.
+
+#+begin_src elisp
+(defun company-yasnippet-or-completion ()
+  (interactive)
+  (let ((yas-fallback-behavior nil))
+    (unless (yas-expand)
+      (call-interactively #'company-complete-common))))
+
+(use-package company
+  :ensure t
+  :config
+  (setq company-idle-delay 0
+	      company-minimum-prefix-length 1)
+  (add-hook 'company-mode-hook (lambda ()
+	  (substitute-key-definition 'company-complete-common
+                               'company-yasnippet-or-completion
+			              company-active-map)))
+  :hook ((csharp-mode . company-mode)
+         (nxml-mode   . company-mode)))
 #+end_src
