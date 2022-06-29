@@ -216,6 +216,10 @@ Include Doom Emacs modeline (status bar), which looks nice. Doom modeline requir
   :init
   (doom-modeline-mode 1))
 #+end_src
+** Title bar
+#+begin_src elisp
+(setq frame-title-format '(multiple-frames "%b" ("" "%b - Wyrd Emacs")))
+#+end_src
 
 ** GUI tweaks
 Some miscellaneous tweaks and one-liners that don't necessarily warrant their own sections
@@ -352,7 +356,10 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
 	 ;; org-habit 
 	 org-habit-graph-column 65
        org-habit-show-habits-only-for-today nil
-       org-habit-show-all-today t)
+       org-habit-show-all-today t
+
+        ;; timer sound (32-bit float didn't work, 16-bit signed PCM did work)
+        org-clock-sound (expand-file-name "alarm.wav" user-emacs-directory))
   :general
   (nvmap :prefix "SPC"
          "o a"   '(org-agenda :which-key "Open org agenda")
