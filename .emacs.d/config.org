@@ -1,5 +1,13 @@
 #+TITLE:Jarizleifr's Emacs Config
 * Initial setup
+** Variables
+Some configs are machine-specific. Define them here by querying ~system-type~.
+#+begin_src elisp
+(defvar jzlfr-org-directory (cond
+	       ((string= system-name "DESKTOP-CPM77EI") "F:/Dropbox/Journal")
+	       ((string= system-name "Grimoire") "F:/Dropbox/Journal")
+	       (t "~/Dropbox/Journal")))
+#+end_src
 ** Package management
 Most packages come from MELPA package repository, so the first thing is to plug our Emacs into there.
 
@@ -136,34 +144,40 @@ I use the Base16 theme system, with a custom theme, designed by yours truly. Bas
   :config
   (load-theme 'base16-skeletor t))
 
-(defvar skeletor-colors base16-skeletor-colors)
-(setq evil-emacs-state-cursor   `(,(plist-get skeletor-colors :base0D) box)
-      evil-insert-state-cursor  `(,(plist-get skeletor-colors :base0D) bar)
-      evil-motion-state-cursor  `(,(plist-get skeletor-colors :base0E) box)
-      evil-normal-state-cursor  `(,(plist-get skeletor-colors :base0B) box)
-      evil-replace-state-cursor `(,(plist-get skeletor-colors :base08) bar)
-      evil-visual-state-cursor  `(,(plist-get skeletor-colors :base09) box))
+(defvar theme-colors base16-skeletor-colors)
+
+(defun get-theme-color (key)
+  "Get a color from set theme"
+  (plist-get theme-colors key))
+
+(setq evil-emacs-state-cursor   `(,(get-theme-color :base0D) box)
+      evil-insert-state-cursor  `(,(get-theme-color :base0D) bar)
+      evil-motion-state-cursor  `(,(get-theme-color :base0E) box)
+      evil-normal-state-cursor  `(,(get-theme-color :base0B) box)
+      evil-replace-state-cursor `(,(get-theme-color :base08) bar)
+      evil-visual-state-cursor  `(,(get-theme-color :base09) box))
 #+end_src
 
 ** Setup fonts
-Use Fira Code as the default and monospaced font, use Garamond for variable pitch mode, for example in org-mode.
+Use Fira Code as the default and monospaced font, use Fira Sans for variable pitch mode, for example in org-mode.
 
 #+begin_src elisp
 (add-to-list 'default-frame-alist '(font . "Fira Code Regular-12" )) ; Needed for emacsclient
 (set-face-attribute 'default nil :font "Fira Code Regular-12")
-(set-face-attribute 'fixed-pitch nil :family "Fira Code" :height 0.6)
-(set-face-attribute 'variable-pitch nil :font "EB Garamond-16")
+(set-face-attribute 'fixed-pitch nil :family "Fira Code" :height 0.65)
+;; This doesn't work with emacsclient
+(set-face-attribute 'variable-pitch nil :font "Fira Sans Regular-14")
 #+end_src
 
 *** Org-mode styling
 Org-mode is my main authoring tool whenever I'm not writing code, so I want it to be as pleasant to look at and read as possible. Make sure Org-mode always uses a variable-pitch font, as well as make the headlines stand out more. Also, remove line numbers on org-mode buffers, as they're really not needed there.
 
 #+begin_src elisp
-(set-face-attribute 'org-document-title nil :height 1.5 :weight 'bold :foreground (plist-get skeletor-colors :base0E))
-(set-face-attribute 'org-level-1 nil :height 1.4 :weight 'bold :foreground (plist-get skeletor-colors :base0E))
-(set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold :foreground (plist-get skeletor-colors :base0E))
-(set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold :foreground (plist-get skeletor-colors :base0E))
-(set-face-attribute 'org-level-4 nil :height 1.0 :weight 'bold :foreground (plist-get skeletor-colors :base0E))
+(set-face-attribute 'org-document-title nil :height 1.5 :weight 'bold :foreground (get-theme-color :base0E))
+(set-face-attribute 'org-level-1 nil :height 1.4 :weight 'bold :foreground (get-theme-color :base0E))
+(set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold :foreground (get-theme-color :base0E))
+(set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold :foreground (get-theme-color :base0E))
+(set-face-attribute 'org-level-4 nil :height 1.0 :weight 'bold :foreground (get-theme-color :base0E))
 
 (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
 (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
@@ -182,7 +196,7 @@ Org-mode is my main authoring tool whenever I'm not writing code, so I want it t
 
 (add-hook 'org-mode-hook 'variable-pitch-mode)
 (add-hook 'org-mode-hook 'org-indent-mode)
-;; This doesn't work
+;; Slight issue with this, line numbers come back if you reload the configuration, revert-buffer works to reset but it's annoying
 (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
 #+end_src 
  
@@ -221,7 +235,7 @@ Dashboard is the first thing you see when you start Emacs. I'll include some rec
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-banner-logo-title "Welcome back, Jarizleifr!")
-  (setq dashboard-startup-banner "~/.emacs.d/splash.png")
+  (setq dashboard-startup-banner "~/.emacs.d/splash.txt")
   (setq dashboard-items '((projects  . 5)
 			   (bookmarks . 5)
 			   (recents   . 5)
@@ -313,9 +327,9 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
   :config
   (setq org-cycle-separator-lines 1
 	 org-archive-subtree-save-file-p nil
-	 org-directory "F:/Dropbox/Journal/"
+   	 org-directory jzlfr-org-directory
 	 org-log-into-drawer t
-        org-default-notes-file (expand-file-name "notes.org" org-directory)
+       org-default-notes-file (expand-file-name "notes.org" org-directory)
 
 	 org-indent-mode 1
 	 org-hide-leading-stars t
