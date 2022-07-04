@@ -12,8 +12,8 @@
 (require 'base16-theme)
 
 (defvar base16-skeletor-colors
-  '(:base00 "#291b36"
-    :base01 "#111122"
+  '(:base00 "#111122"
+    :base01 "#291b36"
     :base02 "#313148"
     :base03 "#746e9f"
     :base04 "#8e7e9d"

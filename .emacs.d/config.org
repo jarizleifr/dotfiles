@@ -6,8 +6,10 @@ Some configs are machine-specific. Define them here by querying ~system-type~.
 (defvar jzlfr-org-directory (cond
 	       ((string= system-name "DESKTOP-CPM77EI") "F:/Dropbox/Journal")
 	       ((string= system-name "Grimoire") "F:/Dropbox/Journal")
+	       ((string= system-name "Wand") "~/Dropbox/Journal")
 	       (t "~/Dropbox/Journal")))
 #+end_src
+
 ** Package management
 Most packages come from MELPA package repository, so the first thing is to plug our Emacs into there.
 
@@ -456,7 +458,7 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
   :hook ((csharp-mode . eglot-ensure)
 	 (nxml-mode   . eglot-ensure))
   :config
-  (add-to-list 'eglot-server-programs '(csharp-mode "D:/scoop/apps/omnisharp/current/omnisharp.exe" "-lsp"))
+  (add-to-list 'eglot-server-programs '(csharp-mode "omnisharp" "-lsp"))
   (add-to-list 'eglot-server-programs '(nxml-mode "lemminx"))
   :general
   (nvmap :prefix "SPC"
