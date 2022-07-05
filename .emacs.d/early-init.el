@@ -7,7 +7,7 @@
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold default-gc-cons-threshold)))
 
 ;; Prevent flashing of white background (value from skeletor theme)
-(set-face-attribute 'default nil :background "#2a1b36" :foreground "#d7ceef")
+(set-face-attribute 'default nil :background "#111122" :foreground "#d7ceef")
 
 ;; Likewise, remove menus, toolbars and scrollbars before GUI is rendered
 (push '(menu-bar-lines . 0) default-frame-alist)
