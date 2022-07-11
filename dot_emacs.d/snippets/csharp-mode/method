@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# contributor: jarizleifr <antti.joutsi@gmail.com>
+# name: C# method 
+# key: method
+# --
+
+public ${1:type} ${2:Method}(${3:params}) {
+  $0
+}
+

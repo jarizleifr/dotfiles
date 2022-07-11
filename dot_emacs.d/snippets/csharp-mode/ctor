@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# contributor: jarizleifr <antti.joutsi@gmail.com>
+# name: C# constructor
+# key: ctor 
+# --
+
+public ${1:ClassName}(${2:params}) {
+  $0
+}

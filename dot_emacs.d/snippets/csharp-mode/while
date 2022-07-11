@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# contributor: jarizleifr <antti.joutsi@gmail.com>
+# name: C# while
+# key: while 
+# --
+
+while (${1:condition}) {
+  $0
+}

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# contributor: jarizleifr <antti.joutsi@gmail.com>
+# name: C# enum 
+# key: enum 
+# --
+
+public enum ${1:EnumName} {
+  $0
+}

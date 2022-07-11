@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# contributor: jarizleifr <antti.joutsi@gmail.com>
+# name: C# auto-property 
+# key: prop 
+# --
+
+public ${1:type} ${2:Name} { get; ${3:set}; }

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# contributor: jarizleifr <antti.joutsi@gmail.com>
+# name: C# struct 
+# key: struct 
+# --
+
+public struct ${1:StructName} {
+  $0
+}
