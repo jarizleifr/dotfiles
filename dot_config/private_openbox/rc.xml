@@ -366,6 +366,12 @@
       <action name="Execute">
         <command>scrot</command>
       </action>
+    </keybind>    
+    <!-- Start menu -->
+    <keybind key="W-Escape">
+      <action name="ShowMenu">
+        <menu>root-menu</menu>
+      </action>
     </keybind>
   </keyboard>
   <mouse>

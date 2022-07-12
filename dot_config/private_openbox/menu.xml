@@ -1,40 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_menu>
     <menu id="root-menu" label="OpenBox 3">
-        <menu id="7" label="Multimedia">
-            <item label="ALSA mixer"> <action name="Execute">
-                <execute>xterm -e alsamixer</execute>
-            </action> </item>
-            <item label="GIMP"> <action name="Execute">
-                <execute>gimp</execute>
-            </action> </item>
-            <item label="Grafx2"> <action name="Execute">
-                <execute>grafx2</execute>
-            </action> </item>
-        </menu>
-        <menu id="19" label="Apps">
-            <item label="File Manager"> <action name="Execute">
-                <execute>pcmanfm</execute>
-            </action> </item>
-            <item label="Emacs"> <action name="Execute">
-                <execute>xterm -e emacs</execute>
-            </action> </item>
-            <item label="urxvt"> <action name="Execute">
-                <execute>urxvt</execute>
-            </action> </item>
-            <item label="Firefox"> <action name="Execute">
-                <execute>firefox</execute>
-            </action> </item>
-            <item label="Discord"> <action name="Execute">
-                <execute>discord</execute>
-            </action> </item>
-            <item label="KeePassXC"> <action name="Execute">
-                <execute>keepassxc</execute>
-            </action> </item>
-            <item label="Dropbox"> <action name="Execute">
-                <execute>dropbox</execute>
-            </action> </item>
-        </menu>
+        <item label="Firefox"> <action name="Execute">
+            <execute>firefox</execute>
+        </action> </item>
+        <item label="File Manager"> <action name="Execute">
+            <execute>pcmanfm</execute>
+        </action> </item>
+        <item label="Emacs"> <action name="Execute">
+            <execute>xterm -e emacs</execute>
+        </action> </item>
+        <item label="urxvt"> <action name="Execute">
+            <execute>urxvt</execute>
+        </action> </item>
+        <item label="Discord"> <action name="Execute">
+            <execute>discord</execute>
+        </action> </item>
+        <item label="KeePassXC"> <action name="Execute">
+            <execute>keepassxc</execute>
+        </action> </item>
+        <item label="Dropbox"> <action name="Execute">
+            <execute>dropbox</execute>
+        </action> </item>
+        <separator/>
+        <item label="ALSA mixer"> <action name="Execute">
+            <execute>xterm -e alsamixer</execute>
+        </action> </item>
+        <item label="GIMP"> <action name="Execute">
+            <execute>gimp</execute>
+        </action> </item>
+        <item label="Grafx2"> <action name="Execute">
+            <execute>grafx2</execute>
+        </action> </item>
+        <separator/>
+            <menu id="30" label="Settings">
+                <item label="Desktop Settings"> <action name="Execute">
+                    <execute>lxappearance</execute>
+		</action> </item>
+                <item label="Openbox Config"> <action name="Execute">
+                    <execute>obconf</execute>
+		</action> </item>
+                <item label="Tint2 Config"> <action name="Execute">
+                    <execute>tint2conf</execute>
+		</action> </item>
+            </menu>
         <separator/>
         <menu id="40" label="System">
             <menu id="client-list-menu"/>
