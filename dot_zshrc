@@ -11,11 +11,17 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
+# Environment
+TERM=xterm
 export EDITOR="emacsclient -nc"
+export QT_QPA_PLATFORMTHEME="qt5ct"
 
 autoload -U colors && colors
 
 PROMPT="$fg[green]%~$fg[white]] "
+
+# Key settings
+bindkey "^[[3~" delete-char
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -30,6 +36,5 @@ fi
 
 alias ls="ls --color=auto"
 alias la="ls -a"
-alias vi="vim"
 alias cd..="cd .."
 alias e="emacsclient -nc"
