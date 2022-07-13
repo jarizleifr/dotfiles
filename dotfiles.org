@@ -1,0 +1,33 @@
+#+TITLE:Jarizleifr's dotfiles
+* System overview
+I've included some notes on the overall system setup so I can remember what pieces I've used and if there are important things to consider.
+
+- Distribution :: Arch Linux
+- Display manager :: LightDM 
+- Window manager :: Openbox 
+  - Autostart uses some custom-made scripts
+- Editor :: Emacs 
+- Terminal :: rxvt-unicode 
+- Theme :: oomox-skeletor (bespoke)
+- Icons :: oomox-skeletor (bespoke)
+- Panel :: Tint2
+  Tint2 start menu relies on a custom-made desktop icon and an executable script, that uses ~xdotool~ to call Openbox menu via hotkey
+- Notifications :: dunst
+** System tray
+- Audio :: volumeicon
+
+* Things to do / figure out
+** DONE Print screen 
+** DONE Capslock to escape
+- can change with ~setxkbmap~, but setting doesn't stick, need to put it in autostart
+** DONE Start menu to Tint2 
+- this apparently requires some guru tactics, like invoking keypresses with a terminal utility
+** DONE Tint2 config to repo
+** TODO Monitor setup
+- [X] Make TV resolution stick to 1920x1080
+- [ ] Make TV resolution stick to 1920x1080 in LightDM as well
+** TODO Mount extra drives
+- [X] Apps/Projects setup
+- [ ] Documents setup
+** TODO Dunst config
+** TODO LightDM config
