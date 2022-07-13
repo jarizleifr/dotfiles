@@ -15,3 +15,6 @@ picom &
 
 # Start other daemons
 /usr/bin/dropbox &
+/usr/bin/dunst &
+volumeicon &
+emacs --daemon
