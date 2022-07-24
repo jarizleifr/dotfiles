@@ -164,11 +164,11 @@ I use the Base16 theme system, with a custom theme, designed by yours truly. Bas
 Use Fira Code as the default and monospaced font, use Fira Sans for variable pitch mode, for example in org-mode.
 
 #+begin_src elisp
-(add-to-list 'default-frame-alist '(font . "Fira Code-12" )) ; Needed for emacsclient
-(set-face-attribute 'default nil :font "Fira Code-12")
+(add-to-list 'default-frame-alist '(font . "Fira Code-11" )) ; Needed for emacsclient
+(set-face-attribute 'default nil :font "Fira Code-11")
 (set-face-attribute 'fixed-pitch nil :family "Fira Code" :height 0.65)
 ;; This doesn't work with emacsclient
-(set-face-attribute 'variable-pitch nil :font "Fira Sans-14")
+(set-face-attribute 'variable-pitch nil :font "Fira Sans-13")
 #+end_src
 
 *** Org-mode styling
@@ -433,8 +433,7 @@ My first idea was to put the entire shims folder in front of the ~PATH~, but tha
 ** Advanced language support
 *** Rust
 #+begin_src elisp
-(use-package rust-mode
-  :ensure t)
+(use-package rust-mode :ensure t)
 #+end_src
 *** C#
 #+begin_src elisp
@@ -460,6 +459,7 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
   :config
   (add-to-list 'eglot-server-programs '(csharp-mode "omnisharp" "-lsp"))
   (add-to-list 'eglot-server-programs '(nxml-mode "lemminx"))
+  (add-to-list 'eglot-server-programs '(rust-mode "rust-analyzer"))
   :general
   (nvmap :prefix "SPC"
 	       "e f"   '(eglot-format :which-key "Eglot format")
@@ -510,5 +510,6 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
                                'company-yasnippet-or-completion
 			              company-active-map)))
   :hook ((csharp-mode . company-mode)
-         (nxml-mode   . company-mode)))
+         (nxml-mode   . company-mode)
+         (rust-mode   . company-mode)))
 #+end_src
