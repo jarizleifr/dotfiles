@@ -8,7 +8,7 @@
             <execute>pcmanfm</execute>
         </action> </item>
         <item label="Emacs"> <action name="Execute">
-            <execute>xterm -e emacs</execute>
+            <execute>emacsclient -nc</execute>
         </action> </item>
         <item label="urxvt"> <action name="Execute">
             <execute>urxvt</execute>
@@ -23,6 +23,10 @@
             <execute>dropbox</execute>
         </action> </item>
         <separator/>
+        <item label="Steam"> <action name="Execute">
+            <execute>steam</execute>
+        </action> </item>
+	<separator/>
         <item label="ALSA mixer"> <action name="Execute">
             <execute>xterm -e alsamixer</execute>
         </action> </item>

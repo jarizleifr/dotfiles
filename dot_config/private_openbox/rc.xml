@@ -43,7 +43,7 @@
   </placement>
   <theme>
     <name>oomox-skeletor</name>
-    <titleLayout>CIML</titleLayout>
+    <titleLayout>CIMLN</titleLayout>
     <!--
       available characters are NDSLIMC, each can occur at most once.
       N: window icon
@@ -265,14 +265,11 @@
       </action>
     </keybind>
     <!-- Window tiling -->
-    <keybind key="W-k">
+    <keybind key="W-Up">
       <action name="ToggleMaximize"/>
     </keybind>
-    <keybind key="W-j">
+    <keybind key="W-Down">
       <action name="Iconify"/>
-    </keybind>
-    <keybind key="W-q">
-      <action name="Close"/>
     </keybind>
     <keybind key="W-Left">
       <action name="Unmaximize"/>
@@ -292,23 +289,8 @@
         <height>100%</height>
       </action>
     </keybind>
-    <keybind key="W-Up">
-      <action name="Unmaximize"/>
-      <action name="MoveResizeTo">
-        <x>0</x>
-        <y>0</y>
-        <width>100%</width>
-        <height>50%</height>
-      </action>
-    </keybind>
-    <keybind key="W-Down">
-      <action name="Unmaximize"/>
-      <action name="MoveResizeTo">
-        <x>0</x>
-        <y>-0</y>
-        <width>100%</width>
-        <height>50%</height>
-      </action>
+    <keybind key="W-q">
+      <action name="Close"/>
     </keybind>
     <!-- Keybindings for window switching -->
     <keybind key="A-Tab">
