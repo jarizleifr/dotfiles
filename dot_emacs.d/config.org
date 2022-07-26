@@ -1,11 +1,10 @@
 #+TITLE:Jarizleifr's Emacs Config
 * Initial setup
 ** Variables
-Some configs are machine-specific. Define them here by querying ~system-type~.
+Some configs might be machine-specific. Define them here by querying ~system-type~.
 #+begin_src elisp
 (defvar jzlfr-org-directory (cond
-	       ((string= system-name "DESKTOP-CPM77EI") "F:/Dropbox/Journal")
-	       ((string= system-name "Grimoire") "F:/Dropbox/Journal")
+	       ((string= system-name "Grimoire") "~/Dropbox/Journal")
 	       ((string= system-name "Wand") "~/Dropbox/Journal")
 	       (t "~/Dropbox/Journal")))
 #+end_src
@@ -95,6 +94,10 @@ Helm is a framework for incremental completions and narrowing down selections. I
 #+begin_src elisp
 (use-package helm
   :ensure t
+  :init
+  (helm-autoresize-mode 1)
+  (setq helm-autoresize-min-height 30
+	    helm-autoresize-max-height 30) 
   :hook ((helm-major-mode-hook . (lambda () (setq auto-composition-mode nil))))
   :general
   (nvmap :keymaps 'override :prefix "SPC"
@@ -164,11 +167,14 @@ I use the Base16 theme system, with a custom theme, designed by yours truly. Bas
 Use Fira Code as the default and monospaced font, use Fira Sans for variable pitch mode, for example in org-mode.
 
 #+begin_src elisp
-(add-to-list 'default-frame-alist '(font . "Fira Code-11" )) ; Needed for emacsclient
-(set-face-attribute 'default nil :font "Fira Code-11")
-(set-face-attribute 'fixed-pitch nil :family "Fira Code" :height 0.65)
+(add-to-list 'default-frame-alist '(font . "Fira Code-10" )) ; Needed for emacsclient
+(set-face-attribute 'default nil :font "Fira Code-10")
+(set-face-attribute 'fixed-pitch nil :family "Fira Code" :height 0.75)
+;; modeline cuts off with fixed-pitch, so let's use Sans here
+(set-face-attribute 'mode-line nil :font "Fira Sans-9:light")
+(set-face-attribute 'mode-line-inactive nil :font "Fira Sans-9:light")
 ;; This doesn't work with emacsclient
-(set-face-attribute 'variable-pitch nil :font "Fira Sans-13")
+(set-face-attribute 'variable-pitch nil :font "Fira Sans-11")
 #+end_src
 
 *** Org-mode styling
@@ -198,8 +204,6 @@ Org-mode is my main authoring tool whenever I'm not writing code, so I want it t
 
 (add-hook 'org-mode-hook 'variable-pitch-mode)
 (add-hook 'org-mode-hook 'org-indent-mode)
-;; Slight issue with this, line numbers come back if you reload the configuration, revert-buffer works to reset but it's annoying
-(add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1)))
 #+end_src 
  
 ** Modeline
@@ -216,6 +220,7 @@ Include Doom Emacs modeline (status bar), which looks nice. Doom modeline requir
 (use-package doom-modeline
   :ensure t
   :init
+  (setq doom-modeline-window-width-limit 70)
   (doom-modeline-mode 1))
 #+end_src
 ** Title bar
@@ -226,7 +231,8 @@ Include Doom Emacs modeline (status bar), which looks nice. Doom modeline requir
 ** GUI tweaks
 Some miscellaneous tweaks and one-liners that don't necessarily warrant their own sections
 #+begin_src elisp
-(global-display-line-numbers-mode)
+(global-display-line-numbers-mode -1)
+(setq column-number-mode t)
 (global-visual-line-mode t)
 (setq ring-bell-function 'ignore)
 #+end_src
