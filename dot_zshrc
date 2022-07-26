@@ -18,7 +18,12 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 
 autoload -U colors && colors
 
-PROMPT="$fg[green]%~$fg[white]] "
+autoload -Uz vcs_info
+precmd() { vcs_info }
+zstyle ':vcs_info:git:*' formats '%b'
+
+setopt prompt_subst
+PROMPT="%F{green}%n@%M %F{magenta}%~ %F{cyan}"'${vcs_info_msg_0_}'$'\n'"%F{white}] "
 
 # Key settings
 bindkey "^[[3~" delete-char
@@ -38,3 +43,5 @@ alias ls="ls --color=auto"
 alias la="ls -a"
 alias cd..="cd .."
 alias e="emacsclient -nc"
+alias g="git"
+alias sd="cd ~ && cd \$(find -L * -type d | fzf)"
