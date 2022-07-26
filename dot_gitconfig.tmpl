@@ -1,0 +1,19 @@
+[user]
+	{{- if (eq .chezmoi.hostname "wand") }}
+	name  = Antti Joutsi
+	email = antti.joutsi@vincit.fi
+	{{- else }}
+	name  = jarizleifr
+	email = antti.joutsi@gmail.com
+	{{- end }}
+[core]
+	editor = vim
+[alias]
+	a  = add
+	ap = add -p
+	c  = commit
+	cm = commit -m
+	d  = diff
+	l  = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %<|(60,trunc)%s %Cgreen(%cr) %<|(80,trunc)%C(bold blue)<%an>%Creset' --abbrev-commit
+	s  = status
+	co = checkout
