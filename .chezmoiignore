@@ -1,2 +1,4 @@
 # init.el gets modified by Emacs, don't apply it
 .emacs.d/init.el
+
+README.org
