@@ -1,14 +1,5 @@
 #+TITLE:Jarizleifr's Emacs Config
 * Initial setup
-** Variables
-Some configs might be machine-specific. Define them here by querying ~system-type~.
-#+begin_src elisp
-(defvar jzlfr-org-directory (cond
-	       ((string= system-name "Grimoire") "~/Dropbox/Journal")
-	       ((string= system-name "Wand") "~/Dropbox/Journal")
-	       (t "~/Dropbox/Journal")))
-#+end_src
-
 ** Package management
 Most packages come from MELPA package repository, so the first thing is to plug our Emacs into there.
 
@@ -66,15 +57,11 @@ Evil collection provides some extra keybindings for other plugins, making everyt
 ** General
 General provides a nice way to configure ~evil~-compatible keybindings with a ~:general~ keyword and mapping functions like ~imap~, ~nvmap~, representing the different evil states where the bindings are active.
 
-Also, bind ~ö~ to Vim ex commands and ~ä~ to forward search while in normal mode, as I'm using a FI keyboard layout, and these small changes makes saving and searching much more convenient.
-
 #+begin_src elisp
 (use-package general
   :ensure t
   :config
   (general-evil-setup t))
-(general-def 'normal "ö" 'evil-ex)
-(general-def 'normal "ä" 'evil-search-forward)
 #+end_src
 
 ** Which key
@@ -220,6 +207,7 @@ Include Doom Emacs modeline (status bar), which looks nice. Doom modeline requir
 (use-package doom-modeline
   :ensure t
   :init
+  ;; Make sure stuff like timers show up in half-screen setups
   (setq doom-modeline-window-width-limit 70)
   (doom-modeline-mode 1))
 #+end_src
@@ -339,7 +327,7 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
   :config
   (setq org-cycle-separator-lines 1
 	 org-archive-subtree-save-file-p nil
-   	 org-directory jzlfr-org-directory
+   	 org-directory "~/Dropbox/Journal"
 	 org-log-into-drawer t
        org-default-notes-file (expand-file-name "notes.org" org-directory)
 
@@ -394,25 +382,6 @@ Setup directories and other general configuration and load up org-habit module.
          "o j n" '(org-journal-new-entry :which-key "New journal entry")))
 #+end_src
 
-** Exporting
-#+begin_src elisp
-(use-package htmlize :ensure t)
-(require 'ox)
-(require 'ox-html)
-#+end_src
-
-* Extended shell commands
-Some functionality (like ~projectile~'s find commands) requires unix commands, which while can be installed on Windows, are usually overridden by Windows-specific commands. Here we add GNU findutils added by ~Scoop~ to the front of the ~PATH~ environment variable, to make sure that we default to our installed tools, instead of Windows tools.
-
-My first idea was to put the entire shims folder in front of the ~PATH~, but that breaks C# language server Omnisharp, which no longer finds SDK for .NET.
-
-#+begin_src elisp
-(setenv "PATH" (concat
-		(substitute-in-file-name "$SCOOP/apps/findutils/current/bin;")
-		(substitute-in-file-name "$SCOOP/apps/coreutils/current/bin;")
-		(getenv "PATH")))
-#+end_src
-
 * Programming
 
 ** Git integration (Magit)
@@ -422,6 +391,11 @@ My first idea was to put the entire shims folder in front of the ~PATH~, but tha
   :config
   (nvmap :prefix "SPC"
          "m"      '(magit :which-key "Magit")))
+#+end_src
+
+** Rest client
+#+begin_src elisp 
+(use-package restclient :ensure t)
 #+end_src
 
 ** Formatting
