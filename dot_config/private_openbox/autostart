@@ -1,7 +1,7 @@
 # Close desktop monitors by default, as I use TV instead
 ~/Scripts/close-monitors.sh
 # Set TV to 1920x1080 instead of 4K default
-xrandr --output HDMI-1 --mode 1920x1080
+xrandr --output HDMI-1 --mode 1920x1080 --rate 60
 
 # Map CapsLock as an Escape
 setxkbmap -option caps:escape
