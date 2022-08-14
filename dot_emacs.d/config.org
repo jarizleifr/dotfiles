@@ -384,7 +384,7 @@ Setup directories and other general configuration and load up org-habit module.
 (use-package org-journal
   :ensure t
   :config
-  (setq org-journal-dir "F:/Dropbox/Journal/Journal"
+  (setq org-journal-dir "~/Dropbox/Journal/Journal"
    	  org-journal-file-type 'weekly
 	  org-journal-date-format "%B %d, %Y (%A)"
 	  org-journal-file-format "%Y-%m-%d.org")
