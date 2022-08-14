@@ -1,0 +1,42 @@
+#define base00 #111122
+#define base01 #291b36
+#define base02 #313148
+#define base03 #746e9f
+#define base04 #8e7e9d
+#define base05 #d6cdee
+#define base06 #eeeeff
+#define base07 #ffffff
+#define base08 #ff7979
+#define base09 #d8d4ab
+#define base0A #f3ae7c
+#define base0B #95d34c
+#define base0C #f7a7ca
+#define base0D #7eb1f7
+#define base0E #a886ef
+#define base0F #4455bb
+
+*.foreground:	base05
+*.background:	base00
+*.color0:	base00
+*.color1:	base08
+*.color2:	base0B
+*.color3:	base0A
+*.color4:	base0F
+*.color5:	base0C
+*.color6:	base0D
+*.color7:	base06
+*.color8:	base03
+*.color9:	base08
+*.color10:	base0B
+*.color11:	base09
+*.color12:	base0E
+*.color13:	base0C
+*.color14:	base0D
+*.color15:	base06
+
+URxvt.font: xft:Fira Code:pixelsize=16
+URxvt.iconFile: /home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/urxvt.svg
+URxvt.scrollBar: false
+URxvt.secondaryScroll: true
+
+Xft.dpi: 144 
