@@ -9,6 +9,10 @@ Most packages come from MELPA package repository, so the first thing is to plug 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-refresh-contents)
 (package-initialize)
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+(when (daemonp)
+  (exec-path-from-shell-initialize))
 #+end_src
 
 *** Setup use-package 
@@ -22,6 +26,11 @@ The config is set to always install use-package if its missing.
         (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
+#+end_src
+
+*** Shell environment
+#+begin_src elisp
+(use-package exec-path-from-shell :ensure t)
 #+end_src
 
 * Commands
