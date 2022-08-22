@@ -420,6 +420,19 @@ Setup directories and other general configuration and load up org-habit module.
 #+end_src
 
 ** Advanced language support
+*** TypeScript
+#+begin_src elisp
+(use-package typescript-mode
+  :ensure t
+  :config
+  (define-derived-mode typescript-react-mode typescript-mode "TypeScript TSX")
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode)))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-react-mode)))
+(use-package flymake-eslint
+  :ensure t
+  :config
+  (add-hook 'typescript-mode-hook (lambda () (flymake-eslint-enable))))
+#+end_src
 *** Rust
 #+begin_src elisp
 (use-package rust-mode :ensure t)
@@ -444,11 +457,14 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 (use-package eglot
   :ensure t
   :hook ((csharp-mode . eglot-ensure)
-	 (nxml-mode   . eglot-ensure))
+	 (nxml-mode   . eglot-ensure)
+	 (typescript-mode   . eglot-ensure))
   :config
   (add-to-list 'eglot-server-programs '(csharp-mode "omnisharp" "-lsp"))
   (add-to-list 'eglot-server-programs '(nxml-mode "lemminx"))
   (add-to-list 'eglot-server-programs '(rust-mode "rust-analyzer"))
+  (add-to-list 'eglot-server-programs '(typescript-mode "typescript-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs '(typescript-react-mode "typescript-language-server" "--stdio"))
   :general
   (nvmap :prefix "SPC"
 	       "e f"   '(eglot-format :which-key "Eglot format")
