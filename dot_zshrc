@@ -14,9 +14,14 @@ compinit
 # Environment
 TERM=xterm
 export EDITOR="emacsclient -nc"
+export PATH="$HOME/.bin:$PATH"
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export WINEARCH=win32
 export WINEPREFIX=~/Apps/Wine
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 autoload -U colors && colors
 

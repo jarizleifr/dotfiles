@@ -31,3 +31,5 @@ I've included some notes on the overall system setup so I can remember what piec
 - [ ] Documents setup
 ** TODO Dunst config
 ** TODO LightDM config
+** TODO Emacs: flymake-eslint-enable
+Something goes wrong with the hook and we have to manually enable this after eglot init

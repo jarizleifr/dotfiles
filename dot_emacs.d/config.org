@@ -414,24 +414,31 @@ Setup directories and other general configuration and load up org-habit module.
   :config (editorconfig-mode 1))
 #+end_src
 
-#+begin_src elisp
-(use-package aggressive-indent
-  :ensure t) 
-#+end_src
-
 ** Advanced language support
+*** JSON
+#+begin_src elisp
+(use-package json-mode :ensure t)
+#+end_src
 *** TypeScript
 #+begin_src elisp
 (use-package typescript-mode
   :ensure t
   :config
   (define-derived-mode typescript-react-mode typescript-mode "TypeScript TSX")
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode)))
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-react-mode)))
 (use-package flymake-eslint
   :ensure t
-  :config
+  :after typescript-mode
+  :init
+  ;; TODO: This isn't working. Eglot will take over flymake after this hook has been run and eslint won't work
+  ;; I suspect same is happening with company mode as well?
   (add-hook 'typescript-mode-hook (lambda () (flymake-eslint-enable))))
+(use-package eslint-fix
+  :ensure t
+  :general
+  (nvmap :prefix "SPC"
+	       "l f"   '(eslint-fix :which-key "ESLint fix")))
 #+end_src
 *** Rust
 #+begin_src elisp
