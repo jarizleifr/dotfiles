@@ -13,6 +13,7 @@ I've included some notes on the overall system setup so I can remember what piec
 - Panel :: Tint2
   Tint2 start menu relies on a custom-made desktop icon and an executable script, that uses ~xdotool~ to call Openbox menu via hotkey
 - Notifications :: dunst
+- Archiver UI :: Xarchiver
 ** System tray
 - Audio :: volumeicon
 
@@ -23,13 +24,22 @@ I've included some notes on the overall system setup so I can remember what piec
 ** DONE Start menu to Tint2 
 - this apparently requires some guru tactics, like invoking keypresses with a terminal utility
 ** DONE Tint2 config to repo
+** DONE Mount extra drives
+- [X] Apps/Projects setup
+- [X] Documents setup
+** DONE Better shutdown menu
+- Too many presses with exitting openbox and then shutting down from LightDM. Should be able to just shutdown the system from a power menu button on tint2.
 ** TODO Monitor setup
 - [X] Make TV resolution stick to 1920x1080
+- [X] Fix refresh rate issue 
+- [X] Scripts for monitor selection
 - [ ] Make TV resolution stick to 1920x1080 in LightDM as well
-** TODO Mount extra drives
-- [X] Apps/Projects setup
-- [ ] Documents setup
+  - This seemed to fix itself with nvidia settings, but I need to double check and figure out where this is actually set
+  - I think one can set up a start script in LightDM
 ** TODO Dunst config
 ** TODO LightDM config
 ** TODO Emacs: flymake-eslint-enable
 Something goes wrong with the hook and we have to manually enable this after eglot init
+** TODO Print screen folder
+- [ ] Put screencaps in ~/screenshots
+** TODO Folder naming convention
