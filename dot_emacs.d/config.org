@@ -291,25 +291,16 @@ Emacs clutters folders quite profusely with backup and temp files, this'll stuff
 Projectile is a project interaction library, which makes dealing with complex projects a breeze. One can for example build, run and test projects by providing a configuration. I'm using Helm as my finder, so helm-projectile is setup here as well, which provides some glue between the two libraries.
 
 #+begin_src elisp
-(defun jzlfr/projectile-project-find-function (dir)
-  (let ((root (projectile-project-root dir)))
-    (and root (cons 'transient root))))
-
 (use-package projectile
   :ensure t
   :config
   (setq projectile-completion-system 'helm
-        projectile-indexing-method 'alien
-	  ;; projectile's find files functionality is broken on windows, when project includes git submodules
-	  ;; workaround until this is fixed https://github.com/bbatsov/projectile/pull/1764
-	  projectile-git-submodule-command nil)
+        projectile-indexing-method 'alien)
   (add-to-list 'projectile-other-file-alist '("xsd" "xml"))
   (add-to-list 'projectile-other-file-alist '("xml" "xsd"))
   (projectile-global-mode)
   ;; Make projectile variables in .dir-locals.el safe
   (put 'projectile-test-suffix-function 'safe-local-variable #'functionp)
-  ;;(with-eval-after-load 'project
-  ;;  (add-to-list 'project-find-functions 'jzlfr/projectile-project-find-function))
   :bind
   (("<f5>" . projectile-run-project)
    ("<f6>" . projectile-test-project)
@@ -323,6 +314,15 @@ Projectile is a project interaction library, which makes dealing with complex pr
   :ensure t
   :config
   (helm-projectile-on))
+
+(defun jzlfr/projectile-project-find-function (dir)
+  (let ((root (projectile-project-root dir)))
+    (and root (cons 'transient root))))
+
+(projectile-mode t)
+
+(with-eval-after-load 'project
+    (add-to-list 'project-find-functions 'jzlfr/projectile-project-find-function))
 #+end_src
 ** File search
 #+begin_src elisp
