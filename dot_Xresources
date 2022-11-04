@@ -38,5 +38,6 @@ URxvt.font: xft:Fira Code:pixelsize=16
 URxvt.iconFile: /home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/urxvt.svg
 URxvt.scrollBar: false
 URxvt.secondaryScroll: true
+URxvt.perl-ext-common: default,resize-font
 
 Xft.dpi: 144 
