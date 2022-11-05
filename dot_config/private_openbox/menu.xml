@@ -38,9 +38,19 @@
     </item>
     <separator />
     <menu id="25" label="Games">
-      <item label="DOSBox-X">
+      <item label="DOSBox">
         <action name="Execute">
-          <execute>dosbox-x</execute>
+          <execute>sh ~/Scripts/run-dosbox.sh</execute>
+        </action>
+      </item>
+      <item label="DOSBox: Windows 3.1">
+        <action name="Execute">
+          <execute>sh ~/Scripts/run-dosbox-win31.sh</execute>
+        </action>
+      </item>
+      <item label="DOSBox: Windows 95">
+        <action name="Execute">
+          <execute>sh ~/Scripts/run-dosbox-win95.sh</execute>
         </action>
       </item>
       <item label="Retroarch">
@@ -116,24 +126,18 @@
     </menu>
     <separator />
     <menu id="40" label="System">
-      <!-- <menu id="client-list-menu"/> -->
-      <!-- <separator/> -->
       <item label="Logout">
         <action name="Exit" />
       </item>
       <item label="Reboot">
         <action name="Execute">
-          <prompt>
-		    Are you sure you want to reboot?
-		</prompt>
+          <prompt>Are you sure you want to reboot?</prompt>
           <execute>sudo shutdown -r now</execute>
         </action>
       </item>
       <item label="Shutdown">
         <action name="Execute">
-          <prompt>
-		    Are you sure you want to reboot?
-		</prompt>
+          <prompt>Are you sure you want to shut down?</prompt>
           <execute>sudo shutdown -h now</execute>
         </action>
       </item>

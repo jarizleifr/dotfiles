@@ -123,10 +123,10 @@
     <number>4</number>
     <firstdesk>1</firstdesk>
     <names>
-      <!-- set names up here if you want to, like this:
-    <name>desktop 1</name>
-    <name>desktop 2</name>
-    -->
+      <name>main</name>
+      <name>web</name>
+      <name>code</name>
+      <name>social</name>
     </names>
     <popupTime>875</popupTime>
     <!-- The number of milliseconds to show the popup for when switching
@@ -227,22 +227,22 @@
         <wrap>no</wrap>
       </action>
     </keybind>
-    <keybind key="W-F1">
+    <keybind key="W-1">
       <action name="GoToDesktop">
         <to>1</to>
       </action>
     </keybind>
-    <keybind key="W-F2">
+    <keybind key="W-2">
       <action name="GoToDesktop">
         <to>2</to>
       </action>
     </keybind>
-    <keybind key="W-F3">
+    <keybind key="W-3">
       <action name="GoToDesktop">
         <to>3</to>
       </action>
     </keybind>
-    <keybind key="W-F4">
+    <keybind key="W-4">
       <action name="GoToDesktop">
         <to>4</to>
       </action>
@@ -265,13 +265,28 @@
       </action>
     </keybind>
     <!-- Window tiling -->
-    <keybind key="W-Up">
-      <action name="ToggleMaximize" />
-    </keybind>
-    <keybind key="W-Down">
+    <keybind key="W-j">
       <action name="Iconify" />
     </keybind>
-    <keybind key="W-Left">
+    <keybind key="W-b">
+      <action name="Unmaximize" />
+      <action name="MoveResizeTo">
+        <x>0</x>
+        <y>-0</y>
+        <width>50%</width>
+        <height>50%</height>
+      </action>
+    </keybind>
+    <keybind key="W-n">
+      <action name="Unmaximize" />
+      <action name="MoveResizeTo">
+        <x>-0</x>
+        <y>-0</y>
+        <width>50%</width>
+        <height>50%</height>
+      </action>
+    </keybind>
+    <keybind key="W-h">
       <action name="Unmaximize" />
       <action name="MoveResizeTo">
         <x>0</x>
@@ -280,7 +295,10 @@
         <height>100%</height>
       </action>
     </keybind>
-    <keybind key="W-Right">
+    <keybind key="W-k">
+      <action name="ToggleMaximize" />
+    </keybind>
+    <keybind key="W-l">
       <action name="Unmaximize" />
       <action name="MoveResizeTo">
         <x>-0</x>
@@ -289,12 +307,31 @@
         <height>100%</height>
       </action>
     </keybind>
+    <keybind key="W-y">
+      <action name="Unmaximize" />
+      <action name="MoveResizeTo">
+        <x>0</x>
+        <y>0</y>
+        <width>50%</width>
+        <height>50%</height>
+      </action>
+    </keybind>
+    <keybind key="W-u">
+      <action name="Unmaximize" />
+      <action name="MoveResizeTo">
+        <x>-0</x>
+        <y>0</y>
+        <width>50%</width>
+        <height>50%</height>
+      </action>
+    </keybind>
     <keybind key="W-q">
       <action name="Close" />
     </keybind>
     <!-- Keybindings for window switching -->
     <keybind key="A-Tab">
       <action name="NextWindow">
+        <allDesktops>yes</allDesktops>
         <finalactions>
           <action name="Focus" />
           <action name="Raise" />
@@ -722,6 +759,26 @@
     <!-- show the manage desktops section in the client-list-(combined-)menu -->
   </menu>
   <applications>
+    <!-- Start all applications on main desktop by default -->
+    <application class="*">
+      <desktop>1</desktop>
+    </application>
+    <!-- Have terminal in all desktops -->
+    <application name="urxvt">
+      <desktop>all</desktop>
+    </application>
+    <!-- Have Firefox in web desktop -->
+    <application class="firefox">
+      <desktop>2</desktop>
+    </application>
+    <!-- Have Emacs in code desktop -->
+    <application name="emacs">
+      <desktop>3</desktop>
+    </application>
+    <!-- Have Discord in social desktop -->
+    <application name="discord">
+      <desktop>4</desktop>
+    </application>
     <!--
   # this is an example with comments through out. use these to make your
   # own rules, but without the comments of course.
