@@ -7,7 +7,10 @@ I've included some notes on the overall system setup so I can remember what piec
 - Window manager :: Openbox 
   - Autostart uses some custom-made scripts
 - Editor :: Emacs 
-- Terminal :: rxvt-unicode 
+- Terminal :: rxvt-unicode
+  Used plugins:
+  - ~urxvt-tabbedex~
+  - ~urxvt-resize-font~
 - Theme :: oomox-skeletor (bespoke)
 - Icons :: oomox-skeletor (bespoke)
 - Panel :: Tint2

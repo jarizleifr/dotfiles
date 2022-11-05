@@ -30,7 +30,7 @@ precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%b'
 
 setopt prompt_subst
-PROMPT="%F{green}%n@%M %F{magenta}%~ %F{cyan}"'${vcs_info_msg_0_}'$'\n'"%F{white}] "
+PROMPT="%F{green}%n@%M %F{magenta}%~ %F{cyan}"'${vcs_info_msg_0_}'$'\n'"%B%F{white}] "
 
 # Key settings
 bindkey "^[[3~" delete-char

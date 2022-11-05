@@ -24,7 +24,7 @@
 *.color4:	base0F
 *.color5:	base0C
 *.color6:	base0D
-*.color7:	base06
+*.color7:	base04
 *.color8:	base03
 *.color9:	base08
 *.color10:	base0B
@@ -38,6 +38,6 @@ URxvt.font: xft:Fira Code:pixelsize=16
 URxvt.iconFile: /home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/urxvt.svg
 URxvt.scrollBar: false
 URxvt.secondaryScroll: true
-URxvt.perl-ext-common: default,resize-font
+URxvt.perl-ext-common: default,resize-font,tabbedex
 
 Xft.dpi: 144 
