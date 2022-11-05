@@ -32,6 +32,9 @@ I've included some notes on the overall system setup so I can remember what piec
 - [X] Documents setup
 ** DONE Better shutdown menu
 - Too many presses with exitting openbox and then shutting down from LightDM. Should be able to just shutdown the system from a power menu button on tint2.
+** DONE Print screen folder
+- [X] Put screencaps in ~/screenshots
+** TODO Picom setup to repo
 ** TODO Monitor setup
 - [X] Make TV resolution stick to 1920x1080
 - [X] Fix refresh rate issue 
@@ -43,6 +46,8 @@ I've included some notes on the overall system setup so I can remember what piec
 ** TODO LightDM config
 ** TODO Emacs: flymake-eslint-enable
 Something goes wrong with the hook and we have to manually enable this after eglot init
-** TODO Print screen folder
-- [ ] Put screencaps in ~/screenshots
+** TODO Emacs: Have a variable for programming modes
+- Currently we need to specify modes for eglot, auto-formatting and company mode all separately. It works but could reduce repetition with a variable
 ** TODO Folder naming convention
+** TODO Tig config
+- Tig uses terminal colors as it should, but color selection could be better (poor contrast with white and green)
