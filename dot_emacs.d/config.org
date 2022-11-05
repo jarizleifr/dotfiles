@@ -449,8 +449,7 @@ Setup directories and other general configuration and load up org-habit module.
 (use-package csharp-mode
   :ensure t
   :config
-  (add-to-list 'auto-mode-alist '("\\.csx\\'" . csharp-mode))
-  :hook (csharp-mode . aggressive-indent-mode))
+  (add-to-list 'auto-mode-alist '("\\.csx\\'" . csharp-mode)))
 #+end_src
 *** XML
 ~nxml-mode~ is included in Emacs by default, but it needs to be setup for XML Schema Definition files.
@@ -463,9 +462,9 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 #+begin_src elisp
 (use-package eglot
   :ensure t
-  :hook ((csharp-mode . eglot-ensure)
-	 (nxml-mode   . eglot-ensure)
-	 (typescript-mode   . eglot-ensure))
+  :hook
+  ((csharp-mode nxml-mode typescript-mode) . eglot-ensure)
+  ((csharp-mode nxml-mode typescript-mode) . (lambda () (add-hook 'before-save-hook 'eglot-format nil 'local)))
   :config
   (add-to-list 'eglot-server-programs '(csharp-mode "omnisharp" "-lsp"))
   (add-to-list 'eglot-server-programs '(nxml-mode "lemminx"))
@@ -521,7 +520,6 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 	  (substitute-key-definition 'company-complete-common
                                'company-yasnippet-or-completion
 			              company-active-map)))
-  :hook ((csharp-mode . company-mode)
-         (nxml-mode   . company-mode)
-         (rust-mode   . company-mode)))
+  :hook
+  ((csharp-mode nxml-mode rust-mode typescript-mode typescript-react-mode) . company-mode))
 #+end_src
