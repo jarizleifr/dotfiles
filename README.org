@@ -16,7 +16,9 @@ I've included some notes on the overall system setup so I can remember what piec
 - Panel :: Tint2
   Tint2 start menu relies on a custom-made desktop icon and an executable script, that uses ~xdotool~ to call Openbox menu via hotkey
 - Notifications :: dunst
+- File manager :: PCManFm
 - Archiver UI :: Xarchiver
+- Compositor :: picom
 ** System tray
 - Audio :: volumeicon
 
@@ -34,7 +36,7 @@ I've included some notes on the overall system setup so I can remember what piec
 - Too many presses with exitting openbox and then shutting down from LightDM. Should be able to just shutdown the system from a power menu button on tint2.
 ** DONE Print screen folder
 - [X] Put screencaps in ~/screenshots
-** TODO Picom setup to repo
+** DONE Picom setup to repo
 ** TODO Monitor setup
 - [X] Make TV resolution stick to 1920x1080
 - [X] Fix refresh rate issue 
