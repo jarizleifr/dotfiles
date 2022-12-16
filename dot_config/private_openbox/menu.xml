@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_menu>
   <menu id="root-menu" label="OpenBox 3">
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/firefox.svg" label="Firefox">
+    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/firefox.svg" label="Browser">
       <action name="Execute">
         <execute>firefox</execute>
       </action>
@@ -11,7 +11,7 @@
         <execute>pcmanfm</execute>
       </action>
     </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/emacs.svg" label="Emacs">
+    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/emacs.svg" label="Editor">
       <action name="Execute">
         <execute>emacsclient -nc</execute>
       </action>
@@ -26,19 +26,25 @@
         <execute>discord</execute>
       </action>
     </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/keepass.svg" label="Keepass">
+    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/keepass.svg" label="Password Manager">
       <action name="Execute">
         <execute>keepassxc</execute>
       </action>
     </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/dropbox.svg" label="Dropbox">
-      <action name="Execute">
-        <execute>dropbox</execute>
-      </action>
-    </item>
     <separator />
-    <menu id="private-menu-1" />
-    <menu id="25" label="Games">
+    <menu id="apps" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/applications-apps.svg" label="Apps">
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/gimp.svg" label="Gimp">
+        <action name="Execute">
+          <execute>gimp</execute>
+        </action>
+      </item>
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/grafx2.svg" label="Grafx2">
+        <action name="Execute">
+          <execute>grafx2</execute>
+        </action>
+      </item>
+    </menu>
+    <menu id="games-apps" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/applications-arcade.svg" label="Games">
       <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/microsoft.svg" label="DOSBox">
         <action name="Execute">
           <execute>sh ~/Scripts/run-dosbox.sh</execute>
@@ -65,28 +71,14 @@
         </action>
       </item>
       <separator />
-      <item label="Wine: Arcanum">
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/applications-roleplaying.svg" label="Wine: Arcanum">
         <action name="Execute">
           <execute>sh ~/Scripts/run-arcanum.sh</execute>
         </action>
       </item>
     </menu>
-    <separator />
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/sound.svg" label="ALSA Mixer">
-      <action name="Execute">
-        <execute>xterm -e alsamixer</execute>
-      </action>
-    </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/gimp.svg" label="Gimp">
-      <action name="Execute">
-        <execute>gimp</execute>
-      </action>
-    </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/grafx2.svg" label="Grafx2">
-      <action name="Execute">
-        <execute>grafx2</execute>
-      </action>
-    </item>
+    <menu id="private-menu-1" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/share.svg" />
+    <menu id="private-menu-2" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/characters-emoji-symbols.svg" />
     <separator />
     <menu id="30" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/settings.svg" label="Settings">
       <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/display.svg" label="Monitor: Use Main">
@@ -105,6 +97,11 @@
         </action>
       </item>
       <separator />
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/openbox.svg" label="Openbox: Toggle private menus">
+        <action name="Execute">
+          <execute>sh ~/Scripts/toggle-private-menus.sh</execute>
+        </action>
+      </item>
       <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/openbox.svg" label="Openbox: Config">
         <action name="Execute">
           <execute>obconf</execute>
@@ -121,6 +118,12 @@
       <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/tint2.svg" label="Tint2 Config">
         <action name="Execute">
           <execute>tint2conf</execute>
+        </action>
+      </item>
+      <separator />
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/sound.svg" label="Audio Mixer">
+        <action name="Execute">
+          <execute>pavucontrol</execute>
         </action>
       </item>
     </menu>
