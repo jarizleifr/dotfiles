@@ -418,29 +418,43 @@ Setup directories and other general configuration and load up org-habit module.
 #+end_src
 
 ** Advanced language support
-*** JSON
-#+begin_src elisp
-(use-package json-mode :ensure t)
-#+end_src
 *** TypeScript
 #+begin_src elisp
+(use-package flymake-eslint :ensure t)
+(use-package eslint-fix :ensure t)
 (use-package typescript-mode
   :ensure t
+  :mode "\\.ts\\'"
   :config
-  (define-derived-mode typescript-react-mode typescript-mode "TypeScript TSX")
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-react-mode)))
-(use-package flymake-eslint
+  (add-hook 'typescript-mode-hook (lambda () (flymake-eslint-enable)))
+  :general
+  (nvmap :keymaps 'typescript-mode-map :prefix "SPC"
+    "f f" '(eslint-fix :which-key "Format buffer")))
+#+end_src
+*** Web languages (HTML/CSS/React)
+~web-mode~ is a somewhat fickle beast, especially when combined with React and TypeScript. Usually TypeScript React projects will use ~eglot~ for general IntelliSense, but ~eslint~ for formatting and error checking.
+
+#+begin_src elisp
+(use-package web-mode
   :ensure t
-  :after typescript-mode
+  :mode (("\\.js\\'" . web-mode)
+         ("\\.tsx\\'" . typescript-react-mode))
   :init
-  ;; TODO: This isn't working. Eglot will take over flymake after this hook has been run and eslint won't work
-  (add-hook 'typescript-mode-hook (lambda () (flymake-eslint-enable))))
-(use-package eslint-fix
+  (define-derived-mode typescript-react-mode web-mode "React TypeScript")
+  :config
+  (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
+  (add-hook 'typescript-react-mode-hook (lambda () (flymake-eslint-enable)))
+  :general
+  (nvmap :keymaps 'typescript-react-mode-map :prefix "SPC"
+    "f f" '(eslint-fix :which-key "Format buffer")))
+#+end_src
+*** JSON
+#+begin_src elisp
+(use-package json-mode
   :ensure t
   :general
-  (nvmap :prefix "SPC"
-	       "l f"   '(eslint-fix :which-key "ESLint fix")))
+  (nvmap :keymaps 'json-mode-map :prefix "SPC"
+    "f f" '(json-pretty-print-buffer :which-key "Format buffer")))
 #+end_src
 *** Rust
 #+begin_src elisp
@@ -465,9 +479,13 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 (use-package eglot
   :ensure t
   :hook
-  ((csharp-mode nxml-mode typescript-mode) . eglot-ensure)
-  ((csharp-mode nxml-mode typescript-mode) . (lambda () (add-hook 'before-save-hook 'eglot-format nil 'local)))
+  ((csharp-mode nxml-mode typescript-mode typescript-react-mode) . eglot-ensure)
+  ((csharp-mode nxml-mode typescript-mode typescript-react-mode) . (lambda () (add-hook 'before-save-hook 'eglot-format nil 'local)))
   :config
+  ;; We want to stop eglot from managing flymake, since we use flymake-eslint for TypeScript/React projects
+  (setq eglot-stay-out-of '(flymake))
+  (add-hook 'eglot--managed-mode-hook
+	    (lambda () (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend nil t)))
   (add-to-list 'eglot-server-programs '(csharp-mode "omnisharp" "-lsp"))
   (add-to-list 'eglot-server-programs '(nxml-mode "lemminx"))
   (add-to-list 'eglot-server-programs '(rust-mode "rust-analyzer"))
