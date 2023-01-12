@@ -32,7 +32,7 @@
 *.color12:	base0E
 *.color13:	base0C
 *.color14:	base0D
-*.color15:	base06
+*.color15:	base05
 
 URxvt.font: xft:Fira Code:pixelsize=16
 URxvt.iconFile: /home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/urxvt.svg
