@@ -34,10 +34,11 @@
 *.color14:	base0D
 *.color15:	base05
 
-URxvt.font: xft:Fira Code:pixelsize=16
+URxvt.font: xft:Iosevka Term SS14:size=11
 URxvt.iconFile: /home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/urxvt.svg
 URxvt.scrollBar: false
 URxvt.secondaryScroll: true
+URxvt.skipBuiltinGlyphs: true
 URxvt.perl-ext-common: default,resize-font,tabbedex
 
-Xft.dpi: 144 
+Xft.dpi: 144

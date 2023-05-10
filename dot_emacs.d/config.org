@@ -46,9 +46,17 @@ Evil mode provides Vim-keybindings for Emacs, making it immediately feel much mo
 	      evil-undo-system 'undo-redo
         evil-want-integration t
 	      evil-want-keybinding nil
+	      evil-want-C-u-scroll t
         evil-vsplit-window-right t
         evil-split-window-below t)
   (evil-mode))
+(use-package evil-org
+  :ensure t
+  :after org
+  :hook (org-mode . (lambda () evil-org-mode))
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 #+end_src
 
 ** Evil-collection
@@ -59,7 +67,6 @@ Evil collection provides some extra keybindings for other plugins, making everyt
   :ensure t
   :after evil
   :config
-  (setq evil-collection-mode-list '(dashboard helm dired bookmark ibuffer magit xref))
   (evil-collection-init))
 #+end_src
 
@@ -91,7 +98,6 @@ Helm is a framework for incremental completions and narrowing down selections. I
 (use-package helm
   :ensure t
   :init
-  (helm-autoresize-mode 1)
   (setq helm-autoresize-min-height 30
 	    helm-autoresize-max-height 30) 
   :hook ((helm-major-mode-hook . (lambda () (setq auto-composition-mode nil))))
@@ -166,14 +172,16 @@ I use the Base16 theme system, with a custom theme, designed by yours truly. Bas
 Use Fira Code as the default and monospaced font, use Fira Sans for variable pitch mode, for example in org-mode.
 
 #+begin_src elisp
-(add-to-list 'default-frame-alist '(font . "Fira Code-10" )) ; Needed for emacsclient
-(set-face-attribute 'default nil :font "Fira Code-10")
-(set-face-attribute 'fixed-pitch nil :family "Fira Code" :height 0.75)
-;; modeline cuts off with fixed-pitch, so let's use Sans here
-(set-face-attribute 'mode-line nil :font "Fira Sans-9:light")
-(set-face-attribute 'mode-line-inactive nil :font "Fira Sans-9:light")
-;; This doesn't work with emacsclient
-(set-face-attribute 'variable-pitch nil :font "Fira Sans-11")
+(add-to-list 'default-frame-alist '(font . "iosevka term ss14-11" )) ; Needed for emacsclient
+(set-face-attribute 'default nil :font "iosevka term ss14-11")
+(set-face-attribute 'fixed-pitch nil :family "iosevka term ss14" :height 0.8)
+;; Required for emacsclient
+(add-hook 'after-make-frame-functions
+	  (lambda (frame)
+	    (when (display-graphic-p frame)
+	      (set-face-attribute 'mode-line nil :font "iosevka aile-8")
+	      (set-face-attribute 'mode-line-inactive nil :font "iosevka aile-8")
+	      (set-face-attribute 'variable-pitch nil :font "iosevka aile-11"))))
 #+end_src
 
 *** Org-mode styling
@@ -201,6 +209,20 @@ Org-mode is my main authoring tool whenever I'm not writing code, so I want it t
 
 (setq org-hidden-keywords (quote (author date email title)))
 
+;; Org habit setup
+(require 'org-habit)
+(with-eval-after-load 'org-habit
+  (setq org-habit-today-glyph ?‖)
+  (setq org-habit-completed-glyph ?✓)
+  (set-face-attribute 'org-habit-clear-face nil :background (get-theme-color :base02))
+  (set-face-attribute 'org-habit-clear-future-face nil :background (get-theme-color :base02))
+  (set-face-attribute 'org-habit-ready-face nil :foreground (get-theme-color :base0B) :background (get-theme-color :base02))
+  (set-face-attribute 'org-habit-ready-future-face nil :background (get-theme-color :base02))
+  (set-face-attribute 'org-habit-alert-face nil :background (get-theme-color :base02))
+  (set-face-attribute 'org-habit-alert-future-face nil :background (get-theme-color :base02))
+  (set-face-attribute 'org-habit-overdue-face nil :background (get-theme-color :base01))
+  (set-face-attribute 'org-habit-overdue-future-face nil :background (get-theme-color :base01)))
+
 (add-hook 'org-mode-hook 'variable-pitch-mode)
 (add-hook 'org-mode-hook 'org-indent-mode)
 #+end_src 
@@ -221,6 +243,7 @@ Include Doom Emacs modeline (status bar), which looks nice. Doom modeline requir
   :init
   ;; Make sure stuff like timers show up in half-screen setups
   (setq doom-modeline-window-width-limit 70)
+  (setq doom-modeline-buffer-file-name 'relative-to-project)
   (doom-modeline-mode 1))
 #+end_src
 ** Title bar
@@ -269,7 +292,7 @@ Dired is the Emacs directory explorer. In general, it's better to use fuzzy find
   (evil-collection-define-key 'normal 'dired-mode-map
     "h" 'dired-single-up-directory
     "l" 'dired-single-buffer)
-  :custom ((dired-listing-switches "-agho --group-directories-first"))
+  :custom ((dired-listing-switches "-aghov --group-directories-first"))
   :general
   (nvmap :prefix "SPC"
          "d d"   '(dired :which-key "Dired")
@@ -299,8 +322,6 @@ Projectile is a project interaction library, which makes dealing with complex pr
   :config
   (setq projectile-completion-system 'helm
         projectile-indexing-method 'alien)
-  (add-to-list 'projectile-other-file-alist '("xsd" "xml"))
-  (add-to-list 'projectile-other-file-alist '("xml" "xsd"))
   (projectile-global-mode)
   ;; Make projectile variables in .dir-locals.el safe
   (put 'projectile-test-suffix-function 'safe-local-variable #'functionp)
@@ -335,46 +356,49 @@ Projectile is a project interaction library, which makes dealing with complex pr
 Org-mode is pretty much the number one reason for why I use Emacs in the first place.
 
 #+begin_src elisp
-(use-package org
-  :config
-  (setq org-cycle-separator-lines 1
-	 org-archive-subtree-save-file-p nil
-   	 org-directory "~/Dropbox/Journal"
-	 org-log-into-drawer t
-       org-default-notes-file (expand-file-name "notes.org" org-directory)
+  (use-package org
+    :init
+    ;; Org modules need to be set before loading
+    (setq org-modules '(org-habit org-tempo))
+    :config
+    (setq org-cycle-separator-lines 1
+	        org-archive-subtree-save-file-p nil
+		      org-directory "~/Dropbox/Journal"
+	        org-log-into-drawer t
+	        org-default-notes-file (expand-file-name "notes.org" org-directory)
 
-	 org-indent-mode 1
-	 org-hide-leading-stars t
-	
-	 ;; org-agenda
-       org-agenda-window-setup 'current-window
-	 org-agenda-files (list (expand-file-name "journal.org" org-directory)
-                               (expand-file-name "habits.org"  org-directory)
-                               (expand-file-name "work.org"    org-directory))
+	        org-indent-mode 1
+	        org-hide-leading-stars t
 
-	 ;; Org source block config
-	 org-src-fontify-natively t
-       org-src-tabs-acts-natively t
-       org-src-preserve-indentation t
-       org-edit-src-content-indentation 0
+	        ;; org-agenda
+	        org-agenda-window-setup 'current-window
+	        org-agenda-files (list (expand-file-name "journal.org" org-directory)
+				       (expand-file-name "habits.org"  org-directory)
+				       (expand-file-name "work.org"    org-directory))
 
-	 ;; Org modules
-       org-modules '(org-habit org-tempo)
+		      ;; Org source block config
+		      org-src-fontify-natively t
+	        org-src-tabs-acts-natively t
+	        org-src-preserve-indentation t
+	        org-edit-src-content-indentation 0
 
-	 ;; org-habit 
-	 org-habit-graph-column 65
-       org-habit-show-habits-only-for-today nil
-       org-habit-show-all-today t
+	        ;; org-habit 
+	        org-habit-graph-column 65
+	        org-habit-show-habits-only-for-today nil
+	        org-habit-show-all-today t
 
-        ;; timer sound (32-bit float didn't work, 16-bit signed PCM did work)
-        org-clock-sound (expand-file-name "alarm.wav" user-emacs-directory))
-  :general
-  (nvmap :prefix "SPC"
-         "o a"   '(org-agenda :which-key "Open org agenda")
-         "o c"   '(org-capture :which-key "Capture org note")
-         "t w"   '((lambda () (interactive) (org-timer-set-timer 50)) :which-key "Set timer to WORK (50 min)") 
-         "t b"   '((lambda () (interactive) (org-timer-set-timer 10)) :which-key "Set timer to BREAK (10 min)") 
-         "t p"   '(org-timer-pause-or-continue :which-key "Pause or continue timer")))
+	        ;; timer sound (32-bit float didn't work, 16-bit signed PCM did work)
+	        org-clock-sound (expand-file-name "alarm.wav" user-emacs-directory))
+    :general
+    (nvmap 'org-mode-map
+      "g j" 'evil-next-visual-line
+      "g k" 'evil-previous-visual-line)
+    (nvmap :prefix "SPC"
+	   "o a"   '(org-agenda :which-key "Open org agenda")
+	   "o c"   '(org-capture :which-key "Capture org note")
+	   "t w"   '((lambda () (interactive) (org-timer-set-timer 50)) :which-key "Set timer to WORK (50 min)") 
+	   "t b"   '((lambda () (interactive) (org-timer-set-timer 10)) :which-key "Set timer to BREAK (10 min)") 
+	   "t p"   '(org-timer-pause-or-continue :which-key "Pause or continue timer")))
 #+end_src
 
 ** Org-journal
@@ -418,6 +442,10 @@ Setup directories and other general configuration and load up org-habit module.
 #+end_src
 
 ** Advanced language support
+*** Lua
+#+begin_src elisp
+(use-package lua-mode :ensure t)
+#+end_src
 *** TypeScript
 #+begin_src elisp
 (use-package flymake-eslint :ensure t)
@@ -456,6 +484,11 @@ Setup directories and other general configuration and load up org-habit module.
   (nvmap :keymaps 'json-mode-map :prefix "SPC"
     "f f" '(json-pretty-print-buffer :which-key "Format buffer")))
 #+end_src
+*** Zig
+#+begin_src elisp
+(use-package zig-mode
+  :ensure t)
+#+end_src
 *** Rust
 #+begin_src elisp
 (use-package rust-mode :ensure t)
@@ -467,10 +500,17 @@ Setup directories and other general configuration and load up org-habit module.
   :config
   (add-to-list 'auto-mode-alist '("\\.csx\\'" . csharp-mode)))
 #+end_src
-*** XML
-~nxml-mode~ is included in Emacs by default, but it needs to be setup for XML Schema Definition files.
+*** Meson
 #+begin_src elisp
-(add-to-list 'auto-mode-alist '("\\.xsd\\'" . nxml-mode))
+(add-to-list 'auto-mode-alist '("/meson.build\\'" . python-mode))
+#+end_src
+*** C/C++
+#+begin_src elisp
+(add-hook 'c-mode-hook (lambda ()
+			 (set-fill-column 80)
+			 (display-fill-column-indicator-mode)))
+;; Add support for preferred ~.cc~ files
+(add-to-list 'auto-mode-alist '("\\.cc\\'" . c++-mode))
 #+end_src
 *** Language Server Protocol (Eglot)
 Eglot is a language server protocol client, which can provide all sorts of IDE-like functionality to Emacs, like symbol renaming, formatting and applying code actions. Here we map different programming modes to language servers to use.
@@ -479,16 +519,20 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 (use-package eglot
   :ensure t
   :hook
-  ((csharp-mode nxml-mode typescript-mode typescript-react-mode) . eglot-ensure)
-  ((csharp-mode nxml-mode typescript-mode typescript-react-mode) . (lambda () (add-hook 'before-save-hook 'eglot-format nil 'local)))
+<<<<<<< HEAD
+  ((csharp-mode typescript-mode typescript-react-mode c-mode c++-mode zig-mode lua-mode) . eglot-ensure)
+  ((csharp-mode typescript-mode typescript-react-mode) . (lambda () (add-hook 'before-save-hook 'eglot-format nil 'local)))
   :config
   ;; We want to stop eglot from managing flymake, since we use flymake-eslint for TypeScript/React projects
   (setq eglot-stay-out-of '(flymake))
   (add-hook 'eglot--managed-mode-hook
 	    (lambda () (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend nil t)))
-  (add-to-list 'eglot-server-programs '(csharp-mode "omnisharp" "-lsp"))
-  (add-to-list 'eglot-server-programs '(nxml-mode "lemminx"))
+  (add-to-list 'eglot-server-programs '(c-mode "clangd"))
+  (add-to-list 'eglot-server-programs '(c++-mode "clangd"))
+  (add-to-list 'eglot-server-programs '(zig-mode "zls"))
   (add-to-list 'eglot-server-programs '(rust-mode "rust-analyzer"))
+  (add-to-list 'eglot-server-programs '(lua-mode "lua-language-server"))
+  (add-to-list 'eglot-server-programs '(csharp-mode "omnisharp" "-lsp"))
   (add-to-list 'eglot-server-programs '(typescript-mode "typescript-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs '(typescript-react-mode "typescript-language-server" "--stdio"))
   :general
@@ -541,5 +585,13 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
                                'company-yasnippet-or-completion
 			              company-active-map)))
   :hook
-  ((csharp-mode nxml-mode rust-mode typescript-mode typescript-react-mode) . company-mode))
+  ((csharp-mode
+    rust-mode
+    zig-mode
+    c-mode
+    c++-mode
+    lua-mode
+    typescript-mode
+    typescript-react-mode)
+   . company-mode))
 #+end_src
