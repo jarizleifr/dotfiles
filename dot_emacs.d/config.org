@@ -32,6 +32,11 @@ The config is set to always install use-package if its missing.
 #+begin_src elisp
 (use-package exec-path-from-shell :ensure t)
 #+end_src
+*** Config editing
+~sudo-edit~ lets us edit write-protected files without specifying sudo beforehand
+#+begin_src elisp
+(use-package sudo-edit :ensure t)
+#+end_src
 
 * Commands
 ** Evil-mode
@@ -266,6 +271,14 @@ Some miscellaneous tweaks and one-liners that don't necessarily warrant their ow
 (setq column-number-mode t)
 (global-visual-line-mode t)
 (setq ring-bell-function 'ignore)
+(setq enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode 1)
+#+end_src
+
+** Centered window
+For more zen-like concentration when writing
+#+begin_src elisp
+(use-package centered-window :ensure t)
 #+end_src
 
 * Dashboard
@@ -634,6 +647,15 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
     "e r" '(eglot-rename :which-key "Eglot rename")
     "e i" '(eglot-inlay-hints-mode :which-key "Eglot toggle inlay hints")))
 #+end_src
+*** Eldoc
+#+begin_src elisp
+(use-package eldoc-box
+  :config
+  (set-face-attribute 'eldoc-box-body nil :font "Fira Sans-9:light")
+  :general (nvmap :prefix "SPC"
+	     "h" '(eldoc-box-help-at-point :which-key "Eldoc")))
+#+end_src
+
 
 ** Programming helpers
 *** Eldoc
