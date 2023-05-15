@@ -347,6 +347,7 @@ Projectile is a project interaction library, which makes dealing with complex pr
   :config
   (setq projectile-completion-system 'helm
         projectile-indexing-method 'alien)
+  (add-to-list 'projectile-globally-ignored-directories "node_modules")
   (projectile-global-mode)
   ;; Make projectile variables in .dir-locals.el safe
   (put 'projectile-test-suffix-function 'safe-local-variable #'functionp)
@@ -499,13 +500,31 @@ Setup directories and other general configuration and load up org-habit module.
 #+end_src
 *** TypeScript
 #+begin_src elisp
+;; (use-package add-node-modules-path)
+(use-package nvm :ensure t)
+
+(defun do-nvm-use (version)
+  (interactive "sVersion: ")
+  (nvm-use version)
+  (exec-path-from-shell-copy-env "PATH"))
+
+(defun try-fix-stuff ()
+  (interactive)
+  (shell-command (format "npx eslint" (shell-quote-argument buffer-file-name) "--cache" "--fix")))
+
+(defun execute-shell-command-on-buffer (shell-command-text)
+  (interactive "MShell command:")
+  (shell-command (format shell-command-text (shell-quote-argument buffer-file-name))))
 (use-package flymake-eslint :ensure t)
 (use-package eslint-fix :ensure t)
 (use-package typescript-mode
+  :after flymake-eslint
   :ensure t
   :mode "\\.ts\\'"
   :config
-  (add-hook 'typescript-mode-hook (lambda () (flymake-eslint-enable)))
+  (add-hook 'typescript-mode-hook (lambda ()
+				    (add-to-list 'exec-path (concat (locate-dominating-file default-directory dir-locals-file) "node_modules/.bin/"))
+				    (flymake-eslint-enable)))
   :general
   (nvmap :keymaps 'typescript-mode-map :prefix "SPC"
     "f f" '(eslint-fix :which-key "Format buffer")))
@@ -515,6 +534,7 @@ Setup directories and other general configuration and load up org-habit module.
 
 #+begin_src elisp
 (use-package web-mode
+  :after flymake-eslint
   :ensure t
   :mode (("\\.js\\'" . web-mode)
          ("\\.tsx\\'" . typescript-react-mode))
@@ -522,7 +542,9 @@ Setup directories and other general configuration and load up org-habit module.
   (define-derived-mode typescript-react-mode web-mode "React TypeScript")
   :config
   (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
-  (add-hook 'typescript-react-mode-hook (lambda () (flymake-eslint-enable)))
+  (add-hook 'typescript-react-mode-hook (lambda ()
+				    (add-to-list 'exec-path (concat (locate-dominating-file default-directory dir-locals-file) "node_modules/.bin/"))
+				    (flymake-eslint-enable)))
   :general
   (nvmap :keymaps 'typescript-react-mode-map :prefix "SPC"
     "f f" '(eslint-fix :which-key "Format buffer")))
@@ -613,6 +635,12 @@ Setup directories and other general configuration and load up org-habit module.
     "e d" '(fennel-proto-repl-eval-defun :which-key "Evaluate Fennel defun")
     "l" '(fennel-proto-repl-link-buffer :which-key "Link Fennel buffer to REPL")))
     #+end_src
+
+*** YAML
+#+begin_src elisp
+(use-package yaml-mode :ensure t)
+#+end_src
+
 *** Language Server Protocol (Eglot)
 Eglot is a language server protocol client, which can provide all sorts of IDE-like functionality to Emacs, like symbol renaming, formatting and applying code actions. Here we map different programming modes to language servers to use.
 
