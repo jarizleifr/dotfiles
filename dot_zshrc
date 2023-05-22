@@ -12,12 +12,14 @@ compinit
 # End of lines added by compinstall
 
 # Environment
-TERM=xterm
+TERM=rxvt-unicode
 export EDITOR="emacsclient -nc"
-export PATH="$HOME/.bin:$PATH"
+export PATH="$HOME/.bin:$HOME/.local/bin:$PATH"
 export QT_QPA_PLATFORMTHEME="qt5ct"
-export WINEARCH=win32
-export WINEPREFIX=~/Apps/Wine
+# export WINEARCH=win32
+# export WINEPREFIX=~/Apps/Wine
+export WINEARCH=win64
+export WINEPREFIX=~/Apps/Wine64
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

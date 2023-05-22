@@ -390,6 +390,12 @@
         <command>/home/jarizleifr/Scripts/toggle-layout.sh</command>
       </action>
     </keybind>
+    <!-- Open a terminal -->
+    <keybind key="W-Return">
+      <action name="Execute">
+        <command>urxvt</command>
+      </action>
+    </keybind>
     <!-- Start menu -->
     <keybind key="W-Escape">
       <action name="ShowMenu">

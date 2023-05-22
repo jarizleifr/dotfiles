@@ -26,6 +26,11 @@
         <execute>discord</execute>
       </action>
     </item>
+    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/pidgin.svg" label="Pidgin">
+      <action name="Pidgin">
+        <execute>pidgin</execute>
+      </action>
+    </item>
     <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/keepass.svg" label="Password Manager">
       <action name="Execute">
         <execute>keepassxc</execute>
@@ -71,12 +76,39 @@
         </action>
       </item>
       <separator />
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Pillars of Eternity">
+        <action name="Execute">
+          <execute>steam steam://rungameid/291650</execute>
+        </action>
+      </item>
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Terraria">
+        <action name="Execute">
+          <execute>steam steam://rungameid/105600</execute>
+        </action>
+      </item>
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Thief II: The Metal Age">
+        <action name="Execute">
+          <execute>steam steam://rungameid/211740</execute>
+        </action>
+      </item>
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Unreal Tournament">
+        <action name="Execute">
+          <execute>steam steam://rungameid/13240</execute>
+        </action>
+      </item>
+      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Valheim">
+        <action name="Execute">
+          <execute>steam steam://rungameid/892970</execute>
+        </action>
+      </item>
+      <separator />
       <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/applications-roleplaying.svg" label="Wine: Arcanum">
         <action name="Execute">
           <execute>sh ~/Scripts/run-arcanum.sh</execute>
         </action>
       </item>
     </menu>
+    <!-- Local menus -->
     <menu id="private-menu-1" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/share.svg" />
     <menu id="private-menu-2" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/characters-emoji-symbols.svg" />
     <separator />

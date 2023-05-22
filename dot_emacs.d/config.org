@@ -175,6 +175,10 @@ Use Fira Code as the default and monospaced font, use Fira Sans for variable pit
 (add-to-list 'default-frame-alist '(font . "iosevka term ss14-11" )) ; Needed for emacsclient
 (set-face-attribute 'default nil :font "iosevka term ss14-11")
 (set-face-attribute 'fixed-pitch nil :family "iosevka term ss14" :height 0.8)
+
+(set-face-attribute 'mode-line nil :font "iosevka aile-8")
+(set-face-attribute 'mode-line-inactive nil :font "iosevka aile-8")
+(set-face-attribute 'variable-pitch nil :font "iosevka aile-11")
 ;; Required for emacsclient
 (add-hook 'after-make-frame-functions
 	  (lambda (frame)
@@ -188,11 +192,11 @@ Use Fira Code as the default and monospaced font, use Fira Sans for variable pit
 Org-mode is my main authoring tool whenever I'm not writing code, so I want it to be as pleasant to look at and read as possible. Make sure Org-mode always uses a variable-pitch font, as well as make the headlines stand out more. Also, remove line numbers on org-mode buffers, as they're really not needed there.
 
 #+begin_src elisp
-(set-face-attribute 'org-document-title nil :height 1.5 :weight 'bold :foreground (get-theme-color :base0E))
-(set-face-attribute 'org-level-1 nil :height 1.4 :weight 'bold :foreground (get-theme-color :base0E))
-(set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold :foreground (get-theme-color :base0E))
-(set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold :foreground (get-theme-color :base0E))
-(set-face-attribute 'org-level-4 nil :height 1.0 :weight 'bold :foreground (get-theme-color :base0E))
+(set-face-attribute 'org-document-title nil :height 1.5 :weight 'bold :foreground (get-theme-color :base0E) :font "iosevka etoile-16")
+(set-face-attribute 'org-level-1 nil :height 1.4 :weight 'bold :foreground (get-theme-color :base0E) :font "iosevka etoile-14")
+(set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold :foreground (get-theme-color :base0E) :font "iosevka etoile-13")
+(set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold :foreground (get-theme-color :base0E) :font "iosevka etoile-12")
+(set-face-attribute 'org-level-4 nil :height 1.0 :weight 'bold :foreground (get-theme-color :base0E) :font "iosevka etoile-11")
 
 (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
 (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
