@@ -149,9 +149,9 @@ I use the Base16 theme system, with a custom theme, designed by yours truly. Bas
   :init
   (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
   :config
-  (load-theme 'base16-skeletor t))
+  (load-theme 'base16-jarizleifr t))
 
-(defvar theme-colors base16-skeletor-colors)
+(defvar theme-colors base16-jarizleifr-colors)
 
 (defun get-theme-color (key)
   "Get a color from set theme"
@@ -523,7 +523,6 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 (use-package eglot
   :ensure t
   :hook
-<<<<<<< HEAD
   ((csharp-mode typescript-mode typescript-react-mode c-mode c++-mode zig-mode lua-mode) . eglot-ensure)
   ((csharp-mode typescript-mode typescript-react-mode) . (lambda () (add-hook 'before-save-hook 'eglot-format nil 'local)))
   :config
