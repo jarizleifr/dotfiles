@@ -1,176 +1,176 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_menu>
   <menu id="root-menu" label="OpenBox 3">
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/firefox.svg" label="Browser">
+    <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/firefox.svg" label="Browser">
       <action name="Execute">
         <execute>firefox</execute>
       </action>
     </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/file-manager.svg" label="File Manager">
+    <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/file-manager.svg" label="File Manager">
       <action name="Execute">
         <execute>pcmanfm</execute>
       </action>
     </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/emacs.svg" label="Editor">
+    <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/emacs.svg" label="Editor">
       <action name="Execute">
         <execute>emacsclient -nc</execute>
       </action>
     </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/terminal.svg" label="Terminal">
+    <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/terminal.svg" label="Terminal">
       <action name="Execute">
         <execute>urxvt</execute>
       </action>
     </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/discord.svg" label="Discord">
+    <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/discord.svg" label="Discord">
       <action name="Execute">
         <execute>discord</execute>
       </action>
     </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/pidgin.svg" label="Pidgin">
+    <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/pidgin.svg" label="Pidgin">
       <action name="Pidgin">
         <execute>pidgin</execute>
       </action>
     </item>
-    <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/keepass.svg" label="Password Manager">
+    <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/keepass.svg" label="Password Manager">
       <action name="Execute">
         <execute>keepassxc</execute>
       </action>
     </item>
     <separator />
-    <menu id="apps" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/applications-apps.svg" label="Apps">
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/gimp.svg" label="Gimp">
+    <menu id="apps" icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/applications-apps.svg" label="Apps">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/gimp.svg" label="Gimp">
         <action name="Execute">
           <execute>gimp</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/grafx2.svg" label="Grafx2">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/grafx2.svg" label="Grafx2">
         <action name="Execute">
           <execute>grafx2</execute>
         </action>
       </item>
     </menu>
-    <menu id="games-apps" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/applications-arcade.svg" label="Games">
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/microsoft.svg" label="DOSBox">
+    <menu id="games-apps" icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/applications-arcade.svg" label="Games">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/microsoft.svg" label="DOSBox">
         <action name="Execute">
           <execute>sh ~/Scripts/run-dosbox.sh</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/microsoft.svg" label="DOSBox: Windows 3.1">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/microsoft.svg" label="DOSBox: Windows 3.1">
         <action name="Execute">
           <execute>sh ~/Scripts/run-dosbox-win31.sh</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/microsoft.svg" label="DOSBox: Windows 95">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/microsoft.svg" label="DOSBox: Windows 95">
         <action name="Execute">
           <execute>sh ~/Scripts/run-dosbox-win95.sh</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/retroarch.svg" label="Retroarch">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/retroarch.svg" label="Retroarch">
         <action name="Execute">
           <execute>retroarch</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Steam">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/steam.svg" label="Steam">
         <action name="Execute">
           <execute>steam</execute>
         </action>
       </item>
       <separator />
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Pillars of Eternity">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/steam.svg" label="Pillars of Eternity">
         <action name="Execute">
           <execute>steam steam://rungameid/291650</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Terraria">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/steam.svg" label="Terraria">
         <action name="Execute">
           <execute>steam steam://rungameid/105600</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Thief II: The Metal Age">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/steam.svg" label="Thief II: The Metal Age">
         <action name="Execute">
           <execute>steam steam://rungameid/211740</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Unreal Tournament">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/steam.svg" label="Unreal Tournament">
         <action name="Execute">
           <execute>steam steam://rungameid/13240</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/steam.svg" label="Valheim">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/steam.svg" label="Valheim">
         <action name="Execute">
           <execute>steam steam://rungameid/892970</execute>
         </action>
       </item>
       <separator />
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/applications-roleplaying.svg" label="Wine: Arcanum">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/applications-roleplaying.svg" label="Wine: Arcanum">
         <action name="Execute">
           <execute>sh ~/Scripts/run-arcanum.sh</execute>
         </action>
       </item>
     </menu>
     <!-- Local menus -->
-    <menu id="private-menu-1" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/share.svg" />
-    <menu id="private-menu-2" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/characters-emoji-symbols.svg" />
+    <menu id="private-menu-1" icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/share.svg" />
+    <menu id="private-menu-2" icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/characters-emoji-symbols.svg" />
     <separator />
-    <menu id="30" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/settings.svg" label="Settings">
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/display.svg" label="Monitor: Use Main">
+    <menu id="30" icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/settings.svg" label="Settings">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/display.svg" label="Monitor: Use Main">
         <action name="Execute">
           <execute>sh ~/Scripts/monitor-main.sh</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/display.svg" label="Monitor: Use TV">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/display.svg" label="Monitor: Use TV">
         <action name="Execute">
           <execute>sh ~/Scripts/monitor-tv.sh</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/display.svg" label="Monitor: Use Retro">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/display.svg" label="Monitor: Use Retro">
         <action name="Execute">
           <execute>sh ~/Scripts/monitor-retro.sh</execute>
         </action>
       </item>
       <separator />
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/openbox.svg" label="Openbox: Toggle private menus">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/openbox.svg" label="Openbox: Toggle private menus">
         <action name="Execute">
           <execute>sh ~/Scripts/toggle-private-menus.sh</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/openbox.svg" label="Openbox: Config">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/openbox.svg" label="Openbox: Config">
         <action name="Execute">
           <execute>obconf</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/openbox.svg" label="Openbox: Reconfigure">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/openbox.svg" label="Openbox: Reconfigure">
         <action name="Reconfigure" />
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/desktop-effects.svg" label="Desktop Settings">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/desktop-effects.svg" label="Desktop Settings">
         <action name="Execute">
           <execute>lxappearance</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/tint2.svg" label="Tint2 Config">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/tint2.svg" label="Tint2 Config">
         <action name="Execute">
           <execute>tint2conf</execute>
         </action>
       </item>
       <separator />
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/sound.svg" label="Audio Mixer">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/sound.svg" label="Audio Mixer">
         <action name="Execute">
           <execute>pavucontrol</execute>
         </action>
       </item>
     </menu>
     <separator />
-    <menu id="40" icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/system-shutdown.svg" label="System">
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/system-log-out.svg" label="Logout">
+    <menu id="40" icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/system-shutdown.svg" label="System">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/system-log-out.svg" label="Logout">
         <action name="Exit" />
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/system-restart.svg" label="Reboot">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/system-restart.svg" label="Reboot">
         <action name="Execute">
           <prompt>Are you sure you want to reboot?</prompt>
           <execute>sudo shutdown -r now</execute>
         </action>
       </item>
-      <item icon="/home/jarizleifr/.icons/oomox-skeletor-icons/apps/scalable/system-shutdown.svg" label="Shutdown">
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/system-shutdown.svg" label="Shutdown">
         <action name="Execute">
           <prompt>Are you sure you want to shut down?</prompt>
           <execute>sudo shutdown -h now</execute>
