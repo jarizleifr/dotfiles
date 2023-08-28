@@ -81,6 +81,11 @@
           <execute>steam steam://rungameid/291650</execute>
         </action>
       </item>
+      <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/steam.svg" label="Stardew Valley">
+        <action name="Execute">
+          <execute>steam steam://rungameid/413150</execute>
+        </action>
+      </item>
       <item icon="/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/steam.svg" label="Terraria">
         <action name="Execute">
           <execute>steam steam://rungameid/105600</execute>

@@ -9,14 +9,20 @@ setxkbmap -option caps:escape
 xset r rate 200 30
 
 # Load wallpaper
+hsetroot -solid #{{ .base00 }}
 ~/.fehbg
 
-# Start taskbar and compositor
-tint2 & 
+# Compositor
 picom &
 
-# Start other daemons
-/usr/bin/dropbox &
-/usr/bin/dunst &
+# Taskbar
+tint2 &
+
+# Volume control
 volumeicon &
-emacs --daemon
+
+# Notifications
+/usr/bin/dunst &
+
+# Dropbox
+/usr/bin/dropbox &

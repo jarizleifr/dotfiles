@@ -11,45 +11,18 @@ I've included some notes on the overall system setup so I can remember what piec
   Used plugins:
   - ~urxvt-tabbedex~
   - ~urxvt-resize-font~
-- Theme :: oomox-skeletor (bespoke)
-- Icons :: oomox-skeletor (bespoke)
+- Theme :: Oomox with Base16, configurable with chezmoi
+- Icons :: Suru++ Aspromauros, follows configured accent color
 - Panel :: Tint2
   Tint2 start menu relies on a custom-made desktop icon and an executable script, that uses ~xdotool~ to call Openbox menu via hotkey
 - Notifications :: dunst
 - File manager :: PCManFm
 - Archiver UI :: Xarchiver
 - Compositor :: picom
+  - xrender, only shadows and fades
 ** System tray
 - Audio :: volumeicon
+- Network :: NetworkManager
 
-* Things to do / figure out
-** DONE Print screen 
-** DONE Capslock to escape
-- can change with ~setxkbmap~, but setting doesn't stick, need to put it in autostart
-** DONE Start menu to Tint2 
-- this apparently requires some guru tactics, like invoking keypresses with a terminal utility
-** DONE Tint2 config to repo
-** DONE Mount extra drives
-- [X] Apps/Projects setup
-- [X] Documents setup
-** DONE Better shutdown menu
-- Too many presses with exitting openbox and then shutting down from LightDM. Should be able to just shutdown the system from a power menu button on tint2.
-** DONE Print screen folder
-- [X] Put screencaps in ~/screenshots
-** DONE Picom setup to repo
-** TODO Monitor setup
-- [X] Make TV resolution stick to 1920x1080
-- [X] Fix refresh rate issue 
-- [X] Scripts for monitor selection
-- [ ] Make TV resolution stick to 1920x1080 in LightDM as well
-  - This seemed to fix itself with nvidia settings, but I need to double check and figure out where this is actually set
-  - I think one can set up a start script in LightDM
-** TODO Dunst config
-** TODO LightDM config
-** TODO Emacs: flymake-eslint-enable
-Something goes wrong with the hook and we have to manually enable this after eglot init
-** TODO Emacs: Have a variable for programming modes
-- Currently we need to specify modes for eglot, auto-formatting and company mode all separately. It works but could reduce repetition with a variable
-** TODO Folder naming convention
-** TODO Tig config
+* TODO Tig config
 - Tig uses terminal colors as it should, but color selection could be better (poor contrast with white and green)

@@ -106,7 +106,9 @@ Helm is a framework for incremental completions and narrowing down selections. I
          "SPC"   '(helm-M-x :which-key "Command")
          "b"     '(helm-buffers-list :which-key "Buffers")
          "s"     '(helm-bookmarks :which-key "Bookmarks")
-         "."     '(helm-find-files :which-key "Find files")))
+         "."     '(helm-find-files :which-key "Find files")
+         "a"     '(helm-apropos :which-key "Apropos")
+         "i"     '(helm-imenu :which-key "Buffer menu")))
 #+end_src
 
 * Global controls 
@@ -183,6 +185,8 @@ Use Fira Code as the default and monospaced font, use Fira Sans for variable pit
 (add-hook 'after-make-frame-functions
 	  (lambda (frame)
 	    (when (display-graphic-p frame)
+	      ;; Replace frame icon
+	      (set-frame-parameter (car (frame-list)) 'icon-type "/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/emacs.svg")
 	      (set-face-attribute 'mode-line nil :font "iosevka aile-8")
 	      (set-face-attribute 'mode-line-inactive nil :font "iosevka aile-8")
 	      (set-face-attribute 'variable-pitch nil :font "iosevka aile-11"))))
@@ -303,6 +307,10 @@ Dired is the Emacs directory explorer. In general, it's better to use fuzzy find
          "d j"   '(dired-jump :which-key "Dired Jump")))
 #+end_src
 
+** Encryption
+#+begin_src elisp
+(epa-file-enable)
+#+end_src
 ** Backups, Auto-Save
 Emacs clutters folders quite profusely with backup and temp files, this'll stuff all backup and autosave data to .emacs.d instead.
 
@@ -366,43 +374,60 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
     (setq org-modules '(org-habit org-tempo))
     :config
     (setq org-cycle-separator-lines 1
-	        org-archive-subtree-save-file-p nil
-		      org-directory "~/Dropbox/Journal"
-	        org-log-into-drawer t
-	        org-default-notes-file (expand-file-name "notes.org" org-directory)
+	  org-archive-subtree-save-file-p nil
+	  org-directory "~/Dropbox/Journal"
+	  org-log-into-drawer t
+	  org-default-notes-file (expand-file-name "notes.org" org-directory)
 
-	        org-indent-mode 1
-	        org-hide-leading-stars t
+	  org-indent-mode 1
+	  org-hide-leading-stars t
 
-	        ;; org-agenda
-	        org-agenda-window-setup 'current-window
-	        org-agenda-files (list (expand-file-name "journal.org" org-directory)
-				       (expand-file-name "habits.org"  org-directory)
-				       (expand-file-name "work.org"    org-directory))
+	  ;; org-agenda
+	  org-agenda-window-setup 'current-window
+	  org-agenda-files (list (expand-file-name "journal.org" org-directory)
+				 (expand-file-name "habits.org"  org-directory)
+				 (expand-file-name "work.org"    org-directory))
 
-		      ;; Org source block config
-		      org-src-fontify-natively t
-	        org-src-tabs-acts-natively t
-	        org-src-preserve-indentation t
-	        org-edit-src-content-indentation 0
+	  ;; Org source block config
+	  org-src-fontify-natively t
+	  org-src-tabs-acts-natively t
+	  org-src-preserve-indentation t
+	  org-edit-src-content-indentation 0
 
-	        ;; org-habit 
-	        org-habit-graph-column 65
-	        org-habit-show-habits-only-for-today nil
-	        org-habit-show-all-today t
+	  ;; org-habit 
+	  org-habit-graph-column 65
+	  org-habit-show-habits-only-for-today nil
+	  org-habit-show-all-today t
 
-	        ;; timer sound (32-bit float didn't work, 16-bit signed PCM did work)
-	        org-clock-sound (expand-file-name "alarm.wav" user-emacs-directory))
+	  ;; timer sound (32-bit float didn't work, 16-bit signed PCM did work)
+	  org-clock-sound (expand-file-name "alarm.wav" user-emacs-directory))
     :general
     (nvmap 'org-mode-map
       "g j" 'evil-next-visual-line
       "g k" 'evil-previous-visual-line)
     (nvmap :prefix "SPC"
-	   "o a"   '(org-agenda :which-key "Open org agenda")
-	   "o c"   '(org-capture :which-key "Capture org note")
-	   "t w"   '((lambda () (interactive) (org-timer-set-timer 50)) :which-key "Set timer to WORK (50 min)") 
-	   "t b"   '((lambda () (interactive) (org-timer-set-timer 10)) :which-key "Set timer to BREAK (10 min)") 
-	   "t p"   '(org-timer-pause-or-continue :which-key "Pause or continue timer")))
+      "o a"   '(org-agenda :which-key "Open org agenda")
+      "o c"   '(org-capture :which-key "Capture org note")
+      "t w"   '((lambda () (interactive) (org-timer-set-timer 50)) :which-key "Set timer to WORK (50 min)") 
+      "t b"   '((lambda () (interactive) (org-timer-set-timer 10)) :which-key "Set timer to BREAK (10 min)") 
+      "t p"   '(org-timer-pause-or-continue :which-key "Pause or continue timer")))
+#+end_src
+
+** Org-roam
+#+begin_src elisp
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-directory (file-truename "~/Dropbox/Roam"))
+  :general
+  (nvmap :prefix "SPC"
+    "n f" '(org-roam-node-find :which-key "Find org-roam Node")
+    "n n" '(org-roam-node-insert :which-key "Insert org-roam Node")
+    "n c" '(org-roam-node-insert :which-key "Capture org-roam Node"))
+  :hook 
+  ((org-mode) . helm-mode) ;; Make sure Helm is enabled in org-mode to get node completions
+  :config
+  (org-roam-db-sync))
 #+end_src
 
 ** Org-journal
@@ -446,6 +471,15 @@ Setup directories and other general configuration and load up org-habit module.
 #+end_src
 
 ** Advanced language support
+*** Tree-sitter
+#+begin_src elisp
+(use-package tree-sitter
+  :ensure t
+  :hook
+  ((c-mode) . tree-sitter-mode)
+  ((c-mode) . tree-sitter-hl-mode))
+(use-package tree-sitter-langs :ensure t)
+#+end_src
 *** Lua
 #+begin_src elisp
 (use-package lua-mode :ensure t)
@@ -516,6 +550,56 @@ Setup directories and other general configuration and load up org-habit module.
 ;; Add support for preferred ~.cc~ files
 (add-to-list 'auto-mode-alist '("\\.cc\\'" . c++-mode))
 #+end_src
+*** Lisps
+#+begin_src elisp
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (fennel-mode . rainbow-delimiters-mode))
+(use-package smartparens
+  :ensure t
+  :hook (fennel-mode . smartparens-mode))
+(use-package aggressive-indent
+  :ensure t
+  :hook (fennel-mode . aggressive-indent-mode))
+
+;; (defun jzlfr/set-directory-at-fennel-rc ()
+;;   (interactive)
+;;   (setq default-directory
+;; 	(expand-file-name
+;; 	 (concat
+;; 	  (file-name-directory (locate-dominating-file
+;; 				default-directory ".fennelrc"))
+;; 	  "fennel"))))
+;; 	      (interactive)
+;; 	      (jzlfr/set-directory-at-fennel-rc)
+;; 	      (fennel-proto-repl-switch-to-repl))
+
+(use-package fennel-mode
+  :ensure t
+  :commands fennel-proto-repl
+  :hook (fennel-mode . fennel-proto-repl-minor-mode)
+  :config
+  ;; Since even lisp-mode sets things like 'defvar 'defconst to 'defun, this results in
+  ;; somewhat more familiar indentation
+  (put 'var 'fennel-indent-function 'defun)
+  (put 'local 'fennel-indent-function 'defun)
+  (put 'global 'fennel-indent-function 'defun)
+  :general
+  (nvmap :keymaps 'fennel-proto-repl-mode-map
+    "g z"     '(fennel-proto-repl-switch-to-repl :which-key "Switch to Fennel code")
+    "SPC z c" '(fennel-proto-repl-clear-buffer :which-key "Clear Fennel REPL buffer"))
+  (nvmap :keymaps 'fennel-mode-map
+    "g z" '(fennel-proto-repl-switch-to-repl :which-key "Switch to Fennel REPL"))
+  (nvmap :keymaps 'fennel-mode-map :prefix "SPC"
+    "v" '((lambda ()
+	    (interactive)
+	    (fennel-proto-repl-show-var-documentation (thing-at-point 'symbol)))
+	  :which-key "Show variable documentation")
+    "e e" '(fennel-proto-repl-eval-buffer :which-key "Evaluate Fennel buffer")
+    "e r" '(fennel-proto-repl-eval-region :which-key "Evaluate Fennel region")
+    "e d" '(fennel-proto-repl-eval-defun :which-key "Evaluate Fennel defun")
+    "l" '(fennel-proto-repl-link-buffer :which-key "Link Fennel buffer to REPL")))
+    #+end_src
 *** Language Server Protocol (Eglot)
 Eglot is a language server protocol client, which can provide all sorts of IDE-like functionality to Emacs, like symbol renaming, formatting and applying code actions. Here we map different programming modes to language servers to use.
 
@@ -527,9 +611,12 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
   ((csharp-mode typescript-mode typescript-react-mode) . (lambda () (add-hook 'before-save-hook 'eglot-format nil 'local)))
   :config
   ;; We want to stop eglot from managing flymake, since we use flymake-eslint for TypeScript/React projects
-  (setq eglot-stay-out-of '(flymake))
-  (add-hook 'eglot--managed-mode-hook
-	    (lambda () (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend nil t)))
+  ;; (setq eglot-stay-out-of '(flymake))
+  ;; (add-hook 'eglot--managed-mode-hook
+  ;; 	    (lambda () (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend nil t)))
+
+  ;; Disable inlay hints by default as it breaks line widths. Enable it with "SPC e i", if needed
+  (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
   (add-to-list 'eglot-server-programs '(c-mode "clangd"))
   (add-to-list 'eglot-server-programs '(c++-mode "clangd"))
   (add-to-list 'eglot-server-programs '(zig-mode "zls"))
@@ -539,15 +626,24 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
   (add-to-list 'eglot-server-programs '(typescript-mode "typescript-language-server" "--stdio"))
   (add-to-list 'eglot-server-programs '(typescript-react-mode "typescript-language-server" "--stdio"))
   :general
-  (nvmap :prefix "SPC"
-	       "e f"   '(eglot-format :which-key "Eglot format")
-	       "e q"   '(eglot-code-action-quickfix :which-key "Eglot quick fix")
-	       "e a"   '(eglot-code-actions :which-key "Eglot code actions")
-	       "e o"   '(eglot-code-action-organize-imports :which-key "Eglot organize imports")
-	       "e r"   '(eglot-rename :which-key "Eglot rename")))
+  (nvmap :keywords 'eglot-mode-map :prefix "SPC"
+    "e f" '(eglot-format :which-key "Eglot format")
+    "e q" '(eglot-code-action-quickfix :which-key "Eglot quick fix")
+    "e a" '(eglot-code-actions :which-key "Eglot code actions")
+    "e o" '(eglot-code-action-organize-imports :which-key "Eglot organize imports")
+    "e r" '(eglot-rename :which-key "Eglot rename")
+    "e i" '(eglot-inlay-hints-mode :which-key "Eglot toggle inlay hints")))
 #+end_src
 
 ** Programming helpers
+*** Eldoc
+#+begin_src elisp
+(use-package eldoc-box
+  :ensure t
+  :general
+  (nvmap :keymaps 'override
+    "g h" '(eldoc-box-help-at-point :which-key "Show Eldoc at-point")))
+#+end_src
 
 *** Keybindings
 #+begin_src elisp
@@ -589,6 +685,7 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 			              company-active-map)))
   :hook
   ((csharp-mode
+    fennel-mode
     rust-mode
     zig-mode
     c-mode

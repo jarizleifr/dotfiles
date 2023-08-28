@@ -41,7 +41,7 @@
   </placement>
   <theme>
     <name>jarizleifr_openbox</name>
-    <titleLayout>CIML</titleLayout>
+    <titleLayout>IMC</titleLayout>
     <!--
       available characters are NDSLIMC, each can occur at most once.
       N: window icon
@@ -55,8 +55,8 @@
     <keepBorder>yes</keepBorder>
     <animateIconify>no</animateIconify>
     <font place="ActiveWindow">
-      <name>Fira Sans</name>
-      <size>7</size>
+      <name>{{ .system_font }}</name>
+      <size>6</size>
       <!-- font size in points -->
       <weight>Normal</weight>
       <!-- 'bold' or 'normal' -->
@@ -64,8 +64,8 @@
       <!-- 'italic' or 'normal' -->
     </font>
     <font place="InactiveWindow">
-      <name>Fira Sans</name>
-      <size>7</size>
+      <name>{{ .system_font }}</name>
+      <size>6</size>
       <!-- font size in points -->
       <weight>Normal</weight>
       <!-- 'bold' or 'normal' -->
@@ -73,7 +73,7 @@
       <!-- 'italic' or 'normal' -->
     </font>
     <font place="MenuHeader">
-      <name>Fira Sans</name>
+      <name>{{ .system_font }}</name>
       <size>8</size>
       <!-- font size in points -->
       <weight>Normal</weight>
@@ -82,7 +82,7 @@
       <!-- 'italic' or 'normal' -->
     </font>
     <font place="MenuItem">
-      <name>Fira Sans</name>
+      <name>{{ .system_font }}</name>
       <size>8</size>
       <!-- font size in points -->
       <weight>Normal</weight>
@@ -91,7 +91,7 @@
       <!-- 'italic' or 'normal' -->
     </font>
     <font place="ActiveOnScreenDisplay">
-      <name>Fira Sans Medium</name>
+      <name>{{ .system_font }}</name>
       <size>7</size>
       <!-- font size in points -->
       <weight>Normal</weight>
@@ -100,7 +100,7 @@
       <!-- 'italic' or 'normal' -->
     </font>
     <font place="InactiveOnScreenDisplay">
-      <name>Fira Sans Medium</name>
+      <name>{{ .system_font }}</name>
       <size>7</size>
       <!-- font size in points -->
       <weight>Normal</weight>
@@ -225,22 +225,23 @@
         <wrap>no</wrap>
       </action>
     </keybind>
-    <keybind key="W-1">
+    <!-- Desktop selectors, start from 6 for ergonomics -->
+    <keybind key="W-6">
       <action name="GoToDesktop">
         <to>1</to>
       </action>
     </keybind>
-    <keybind key="W-2">
+    <keybind key="W-7">
       <action name="GoToDesktop">
         <to>2</to>
       </action>
     </keybind>
-    <keybind key="W-3">
+    <keybind key="W-8">
       <action name="GoToDesktop">
         <to>3</to>
       </action>
     </keybind>
-    <keybind key="W-4">
+    <keybind key="W-9">
       <action name="GoToDesktop">
         <to>4</to>
       </action>
@@ -270,18 +271,18 @@
       <action name="Unmaximize" />
       <action name="MoveResizeTo">
         <x>0</x>
-        <y>-0</y>
+        <y>-10</y>
         <width>50%</width>
-        <height>50%</height>
+        <height>51%</height>
       </action>
     </keybind>
     <keybind key="W-n">
       <action name="Unmaximize" />
       <action name="MoveResizeTo">
         <x>-0</x>
-        <y>-0</y>
+        <y>-10</y>
         <width>50%</width>
-        <height>50%</height>
+        <height>51%</height>
       </action>
     </keybind>
     <keybind key="W-h">
@@ -384,6 +385,16 @@
         <command>scrot ~/screenshots/%Y-%m-%d-%H%M%S_$wx$h_scrot.png</command>
       </action>
     </keybind>
+    <keybind key="W-e">
+      <action name="Execute">
+        <command>emacsclient -nc</command>
+      </action>
+    </keybind>
+    <keybind key="W-r">
+      <action name="Execute">
+        <command>dmenu_run -fn "Iosevka Term SS14-8"</command>
+      </action>
+    </keybind>
     <!-- Toggle between FI and US keyboard layout -->
     <keybind key="W-space">
       <action name="Execute">
@@ -400,6 +411,11 @@
     <keybind key="W-Escape">
       <action name="ShowMenu">
         <menu>root-menu</menu>
+      </action>
+    </keybind>
+    <keybind key="W-Tab">
+      <action name="ShowMenu">
+        <menu>client-list-combined-menu</menu>
       </action>
     </keybind>
   </keyboard>

@@ -1,10 +1,8 @@
-# -*- mode: conf-xdefaults -*-
+# -*- mode: conf -*-
 
 # Menu
-menu.border.width: 20
-menu.overlap.x: -10
-
-menu.border.color: #{{ .base00 }}
+menu.border.color: #{{ .base01 }}
+menu.border.width: 2
 
 menu.title.bg: Solid Flat
 menu.title.bg.color: #{{ .base00 }}
@@ -38,7 +36,7 @@ window.active.title.separator.color: #{{ .base01 }}
 window.active.text.justify: center
 
 window.active.label.bg: parentrelative
-window.active.label.text.color: #{{ .base01 }}
+window.active.label.text.color: #{{ .base05 }}
 
 window.active.handle.bg: flat solid
 window.active.handle.bg.color: #{{ .base01 }}
@@ -59,19 +57,11 @@ window.active.button.disabled.bg.color: #{{ .base01 }}
 window.active.button.disabled.image.color: #{{ .base03 }}
 
 window.active.button.hover.bg: flat solid
-window.active.button.hover.bg.color: #{{ .base01 }}
+window.active.button.hover.bg.color: #{{ .base02 }}
 window.active.button.hover.image.color: #{{ .base05 }}
 
-#window.active.button.toggled.bg: #{{ .base0E }}
-#window.active.button.toggled.image.color: #{{ .base07 }}
-
-# Specific button colors
-window.active.button.close.unpressed.image.color: #{{ .base08 }}
-window.active.button.iconify.unpressed.image.color: #{{ .base0A }}
-window.active.button.max.unpressed.image.color: #{{ .base0B }}
-window.active.button.max.pressed.image.color: #{{ .base0B }}
-window.active.button.max.toggled.unpressed.image.color: #{{ .base0B }}
-window.active.button.max.toggled.pressed.image.color: #{{ .base0B }}
+window.active.button.toggled.bg: #{{ .base01 }}
+window.active.button.toggled.image.color: #{{ .base05 }}
 
 # Inactive window
 window.inactive.border.color: #{{ .base01 }}
@@ -82,7 +72,7 @@ window.inactive.title.separator.color: #{{ .base01 }}
 window.inactive.text.justify: center
 
 window.inactive.label.bg: parentrelative
-window.inactive.label.text.color: #{{ .base01 }}
+window.inactive.label.text.color: #{{ .base03 }}
 
 window.inactive.handle.bg: flat solid
 window.inactive.handle.bg.color: #{{ .base01 }}
@@ -103,11 +93,14 @@ window.inactive.button.disabled.bg.color: #{{ .base03 }}
 window.inactive.button.disabled.image.color: #{{ .base01 }}
 
 window.inactive.button.hover.bg: flat solid
-window.inactive.button.hover.bg.color: #{{ .base01 }}
-window.inactive.button.hover.image.color: #{{ .base0E }}
+window.inactive.button.hover.bg.color: #{{ .base02 }}
+window.inactive.button.hover.image.color: #{{ .base05 }}
+
+window.inactive.button.toggled.bg: #{{ .base0E }}
+window.inactive.button.toggled.image.color: #{{ .base03 }}
 
 # OSD
-osd.border.width: 3
+osd.border.width: 2
 osd.border.color: #{{ .base02 }}
 
 osd.bg: Solid Flat
@@ -119,7 +112,7 @@ osd.label.bg.color: #{{ .base00 }}
 osd.label.text.color: #{{ .base05 }}
 
 osd.hilight.bg: Solid Flat
-osd.hilight.bg.color: #{{ .base0B }}
+osd.hilight.bg.color: #{{ .accent }}
 osd.unhilight.bg: flat solid
 osd.unhilight.bg.color: #{{ .base00 }}
 
@@ -143,8 +136,8 @@ menu.title.text.font:shadow=n
 
 # Everything else
 border.width: 2
-padding.width: 4
-padding.height: 4
+padding.width: 2
+padding.height: 2
 window.handle.width: 0
 window.client.padding.width: 0
-window.label.text.justify: right
+window.label.text.justify: center

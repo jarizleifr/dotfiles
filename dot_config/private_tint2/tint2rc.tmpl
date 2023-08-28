@@ -47,21 +47,21 @@ border_color_pressed = #000000 0
 
 # Background 4: Active task
 rounded = 0
-border_width = 4
-border_sides = L
+border_width = 0
+border_sides = 
 border_content_tint_weight = 0
 background_content_tint_weight = 0
-background_color = #{{ .base02 }} 100
-border_color = #{{ .accent }} 100
+background_color = #{{ .base03 }} 100
+border_color = #000000 0
 background_color_hover = #{{ .base02 }} 100
-border_color_hover = #{{ .accent }} 100
+border_color_hover = #000000 0
 background_color_pressed = #{{ .base02 }} 100
-border_color_pressed = #{{ .accent }} 100
+border_color_pressed = #000000 0
 
 # Background 5: Default task
 rounded = 0
-border_width = 4
-border_sides = L
+border_width = 0
+border_sides = 
 border_content_tint_weight = 0
 background_content_tint_weight = 0
 background_color = #000000 0
@@ -72,9 +72,9 @@ background_color_pressed = #{{ .base02 }} 100
 border_color_pressed = #000000 0
 
 # Background 6: Systray
-rounded = 12
-border_width = 4
-border_sides = TBLR
+rounded = 0
+border_width = 0
+border_sides = 
 border_content_tint_weight = 0
 background_content_tint_weight = 0
 background_color = #{{ .base02 }} 100
@@ -86,10 +86,10 @@ border_color_pressed = #000000 30
 
 #-------------------------------------
 # Panel
-panel_items = L:C:TS
-panel_size = 100% 40
+panel_items = LCTS
+panel_size = 100% 32
 panel_margin = 0 0
-panel_padding = 0 0 2
+panel_padding = 0 0 8
 panel_background_id = 1
 wm_menu = 1
 panel_dock = 0
@@ -106,11 +106,11 @@ strut_policy = follow_size
 panel_window_name = tint2
 disable_transparency = 0
 mouse_effects = 1
-font_shadow = 0
-mouse_hover_icon_asb = 100 0 10
+font_shadow = 1
+mouse_hover_icon_asb = 100 0 0
 mouse_pressed_icon_asb = 100 0 0
 scale_relative_to_dpi = 0
-scale_relative_to_screen_height = 0
+scale_relative_to_screen_height = 4
 
 #-------------------------------------
 # Taskbar
@@ -124,7 +124,7 @@ taskbar_hide_inactive_tasks = 0
 taskbar_hide_different_monitor = 0
 taskbar_hide_different_desktop = 0
 taskbar_always_show_all_desktop_tasks = 0
-taskbar_name_padding = 0 0
+taskbar_name_padding = 0 4
 taskbar_name_background_id = 0
 taskbar_name_active_background_id = 0
 taskbar_name_font_color = #e3e3e3 100
@@ -140,7 +140,7 @@ task_icon = 1
 task_centered = 0
 urgent_nb_of_blink = 100000
 task_maximum_size = 32 32
-task_padding = 7 4 0
+task_padding = 4 4 0
 task_tooltip = 1
 task_thumbnail = 0
 task_thumbnail_size = 210
@@ -154,10 +154,10 @@ mouse_scroll_down = iconify
 
 #-------------------------------------
 # System tray (notification area)
-systray_padding = 8 0 2
+systray_padding = 8 0 4
 systray_background_id = 6
 systray_sort = ascending
-systray_icon_size = 30
+systray_icon_size = 24
 systray_icon_asb = 100 -100 25
 systray_monitor = 1
 systray_name_filter = 
@@ -168,7 +168,7 @@ launcher_padding = 0 0 0
 launcher_background_id = 2
 launcher_icon_background_id = 0
 launcher_icon_size = 32
-launcher_icon_asb = 100 -100 -100
+launcher_icon_asb = 100 0 0
 launcher_icon_theme = jarizleifr_icons
 launcher_icon_theme_override = 1
 startup_notifications = 1
@@ -179,10 +179,10 @@ launcher_item_app = /usr/share/applications/tint2-button.desktop
 # Clock
 time1_format = %H
 time2_format = %M
-time1_font = Iosevka Term SS14 14
+time1_font = {{ .term_font }} 14
 time1_timezone = 
 time2_timezone = 
-time2_font = Iosevka Term SS14 14
+time2_font = {{ .term_font }} 14
 clock_font_color = #{{ .base05 }} 100
 clock_padding = 0 0
 clock_background_id = 0
@@ -239,5 +239,5 @@ tooltip_hide_timeout = 0.1
 tooltip_padding = 8 8
 tooltip_background_id = 3
 tooltip_font_color = #dddddd 100
-tooltip_font = Fira Sans 11
+tooltip_font = {{ .system_font }} 11
 
