@@ -1,0 +1,31 @@
+{{ if eq .osid "linux-arch" -}}
+
+#!/bin/bash
+
+# Make sure Themix/Oomox is installed
+yay -S themix-full-git
+
+if [ pgrep emacs > /dev/null]; then 
+  pkill emacs
+fi
+
+if [ pgrep dunst > /dev/null]; then 
+  pkill dunst
+fi
+
+if [ pgrep tint2 > /dev/null]; then 
+  pkill tint2
+  tint2 &
+fi
+
+# Reconfigure X
+xrdb ~/.Xresources
+# Reconfigure window manager
+openbox --reconfigure
+# TODO: Reconfigure display manager
+
+# Generate Oomox themes
+/opt/oomox/plugins/theme_oomox/change_color.sh -o jarizleifr ~/Scripts/oomox-colors.sh
+/opt/oomox/plugins/icons_suruplus_aspromauros/change_color.sh -o jarizleifr_icons ~/Scripts/oomox-colors.sh
+
+{{ end -}}

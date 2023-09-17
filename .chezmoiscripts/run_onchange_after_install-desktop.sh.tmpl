@@ -1,0 +1,39 @@
+{{ if eq .osid "linux-arch" -}}
+
+#!/bin/bash
+
+{{ $packages := list
+   "dmenu"
+   "dunst"
+   "feh"
+   "hsetroot"
+   "lightdm"
+   "lightdm-gtk-greeter"
+   "lightdm-gtk-greeter-settings"
+   "obconf"
+   "openbox"
+   "picom"
+   "pulseaudio"
+   "network-manager-applet"
+   "nvidia"
+   "scrot"
+   "tint2"
+   "volumeicon"
+   "xcursor-vanilla-dmz"
+   "xdotool"
+   "xorg-server" -}}
+
+{{ $yaypackages := list
+   "rxvt-unicode-pixbuf"
+   "urxvt-resize-font-git"
+   "urxvt-tabbedex" -}}
+
+#!/bin/bash
+
+# Install packages
+sudo pacman -Sy {{ $packages | join " " }}
+
+# Install AUR packages
+yay -S {{ $packages | join " " }}
+
+{{ end -}}

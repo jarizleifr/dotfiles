@@ -1,23 +1,22 @@
 {{ if eq .osid "linux-arch" -}}
 
 {{ $packages := list
-   "fd-find"
+   "fd"
    "git"
    "htop"
    "neofetch"
    "rsync"
+   "the_silver_searcher"
    "tig" -}}
-
-{{ $sudo := "sudo " -}}
-{{ if eq .chezmoi.username "root" -}}
-{{   $sudo = "" -}}
-{{ end -}}
 
 #!/bin/bash
 
 set -eufo pipefail
 
 # Install packages
-{{ $sudo }}pacman -Sy {{ $packages | join " " }}
+sudo pacman -Sy {{ $packages | join " " }}
+
+# Setup Yay (AUR helper)
+sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
 
 {{ end -}}
