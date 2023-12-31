@@ -1,22 +1,20 @@
 {{ if eq .osid "linux-arch" -}}
-
 #!/bin/bash
 
+# Automatically setups new theme if color scheme is changed
+# Theme data hash: {{ include ".chezmoidata.toml" | sha256sum }}
+
 # Make sure Themix/Oomox is installed
-yay -S themix-full-git
+# yay -S themix-theme-oomox-git themix-icons-suru-plus-aspromauros-git
 
-if [ pgrep emacs > /dev/null]; then 
-  pkill emacs
-fi
+# Generate Oomox themes
+COLORS=~/Scripts/oomox-colors.sh
+PLUGINS=/opt/oomox/plugins
+$PLUGINS/theme_oomox/change_color.sh -o jarizleifr $COLORS
+$PLUGINS/icons_suruplus_aspromauros/change_color.sh -o jarizleifr_icons $COLORS
 
-if [ pgrep dunst > /dev/null]; then 
-  pkill dunst
-fi
-
-if [ pgrep tint2 > /dev/null]; then 
-  pkill tint2
-  tint2 &
-fi
+# Restart services that use color schemes
+systemctl --user restart emacs tint2 dunst
 
 # Reconfigure X
 xrdb ~/.Xresources
@@ -24,8 +22,13 @@ xrdb ~/.Xresources
 openbox --reconfigure
 # TODO: Reconfigure display manager
 
-# Generate Oomox themes
-/opt/oomox/plugins/theme_oomox/change_color.sh -o jarizleifr ~/Scripts/oomox-colors.sh
-/opt/oomox/plugins/icons_suruplus_aspromauros/change_color.sh -o jarizleifr_icons ~/Scripts/oomox-colors.sh
+# Regenerate wallpaper
+convert wallpaper_src.png \
+        -fill '#{{ .base00 }}' -opaque '#000000' \
+        -fill '#{{ .base01 }}' -opaque '#555555' \
+        -fill '#{{ .accent }}' -opaque '#ffffff' \
+        ~/wallpaper.png
+
+~/.fehbg
 
 {{ end -}}

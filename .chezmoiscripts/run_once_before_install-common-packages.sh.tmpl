@@ -1,0 +1,31 @@
+{{ if eq .chezmoi.os "linux" -}}
+
+{{ $packages := list
+   "fd"
+   "git"
+   "htop"
+   "neofetch"
+   "rsync"
+   "the_silver_searcher"
+   "tig" -}}
+
+#!/bin/bash
+
+set -eufo pipefail
+
+# Install packages
+{{ .updatePkg }}
+{{ .installPkg }} {{ $packages | join " " }}
+
+{{ if eq .osid "linux-arch" -}}
+# Setup Yay (AUR helper) for Arch Linux
+
+if pacman -Qi yay >/dev/null 2>&1; then
+   echo "Yay already installed, skipping."
+else
+   sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
+ fi
+{{ end -}}
+
+
+{{ end -}}

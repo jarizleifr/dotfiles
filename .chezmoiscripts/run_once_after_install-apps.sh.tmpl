@@ -1,0 +1,20 @@
+{{ if eq .osid "linux-arch" -}}
+
+{{ $packages := list
+   "audacity"
+   "discord"
+   "firefox"
+   "gimp"
+   "keepassxc"
+   "pidgin"
+   "vlc" -}}
+
+#!/bin/bash
+
+set -eufo pipefail
+
+# Install packages
+{{ .updatePkg }}
+{{ .installPkg }} {{ $packages | join " " }}
+
+{{ end -}}

@@ -14,16 +14,18 @@ compinit
 # Environment
 TERM=rxvt-unicode
 export EDITOR="emacsclient -nc"
-export PATH="$HOME/.bin:$HOME/.local/bin:$PATH"
+export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.nimble/bin:$PATH"
 export QT_QPA_PLATFORMTHEME="qt5ct"
-# export WINEARCH=win32
-# export WINEPREFIX=~/Apps/Wine
-export WINEARCH=win64
-export WINEPREFIX=~/Apps/Wine64
+export WINEARCH=win32
+export WINEPREFIX=/apps/jarizleifr/Wine
+# export WINEARCH=win64
+# export WINEPREFIX=~/Apps/Wine64
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# source /usr/share/nvm/init-nvm.sh
+
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 autoload -U colors && colors
 

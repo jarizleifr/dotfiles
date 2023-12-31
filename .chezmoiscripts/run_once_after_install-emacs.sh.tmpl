@@ -1,4 +1,4 @@
-{{ if eq .osid "linux-arch" -}}
+{{ if eq .chezmoi.os "linux" -}}
 
 #!/bin/bash
 
@@ -7,8 +7,9 @@ if [ ! -f "$FILE" ]; then
   # Make sure init.el exists and loads config properly
   echo "(org-babel-load-file (expand-file-name \"config.org\" user-emacs-directory))" > "$FILE"
 fi
-# Install Emacs
-sudo pacman -S emacs
+
+{{ .installPkg }} emacs
+
 # Enable Emacs daemon 
 systemctl --user enable --now emacs
 

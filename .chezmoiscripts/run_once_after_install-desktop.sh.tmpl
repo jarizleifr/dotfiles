@@ -1,7 +1,5 @@
 {{ if eq .osid "linux-arch" -}}
 
-#!/bin/bash
-
 {{ $packages := list
    "dmenu"
    "dunst"
@@ -10,8 +8,10 @@
    "lightdm"
    "lightdm-gtk-greeter"
    "lightdm-gtk-greeter-settings"
+   "lxappearance"
    "obconf"
    "openbox"
+   "pcmanfm"
    "picom"
    "pulseaudio"
    "network-manager-applet"
@@ -34,6 +34,6 @@
 sudo pacman -Sy {{ $packages | join " " }}
 
 # Install AUR packages
-yay -S {{ $packages | join " " }}
+yay -S {{ $yaypackages | join " " }}
 
 {{ end -}}

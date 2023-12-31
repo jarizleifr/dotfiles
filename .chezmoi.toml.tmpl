@@ -4,4 +4,6 @@
 {{- end -}}
 
 [data]
-  osid = {{ $osid | quote }}
+  osid       = {{ $osid | quote }}
+  updatePkg  = "sudo pacman -Sy"
+  installPkg = "sudo pacman -S"
