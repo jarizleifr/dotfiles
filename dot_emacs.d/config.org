@@ -90,23 +90,46 @@ General provides a nice way to configure ~evil~-compatible keybindings with a ~:
 (which-key-mode)
 #+end_src
 
-** Helm
-Helm is a framework for incremental completions and narrowing down selections. It is at the very heart of everything that happens in Emacs, we can use it to do selections on anything that can be represented as a list, like commands, buffers, bookmarks and files.
+* Navigation and Completion
+** Consult
+~consult~ provides search and navigation commands for buffers, imenu, files, etc.
 
 #+begin_src elisp
-(use-package helm
+(use-package consult :ensure t)
+#+end_src
+
+** Find File in Project
+~find-file-in-project~ helps us search through folders that use version control like Git. I used to use ~projectile~, but find this is way more lighter and just as good setup for my use case. It uses regular ~find-file~ as fallback when not in a Git folder, so it's a nifty all-around replacer for finding files.
+
+#+begin_src elisp
+(use-package find-file-in-project
   :ensure t
-  :init
-  (setq helm-autoresize-min-height 30
-        helm-autoresize-max-height 30)
+  :config
+  (setq ffip-use-rust-fd t))
+#+end_src
+
+** Vertico
+Vertico is a completion framework, similar to Helm, Ivy, ~fido-vertical-mode~ etc. I used to use Helm, but moved to Vertico in 2024.
+
+#+begin_src elisp
+(use-package vertico
+  :ensure t
+  :after (consult find-file-in-project)
+  :init (vertico-mode)
+  :config
+  (setq completion-styles '(basic partial-completion emacs22 flex)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion))))
   :general
   (nvmap :keymaps 'override :prefix "SPC"
-    "SPC" '(helm-M-x :which-key "Command")
-    "b"   '(helm-buffers-list :which-key "Buffers")
-    "s"   '(helm-bookmarks :which-key "Bookmarks")
-    "."   '(helm-find-files :which-key "Find files")
-    "a"   '(helm-apropos :which-key "Apropos")
-    "i"   '(helm-imenu :which-key "Buffer menu")))
+    "SPC" '(execute-extended-command :which-key "Command")
+    "b"   '(consult-buffer :which-key "Buffers")
+    "s"   '(consult-bookmark :which-key "Bookmarks")
+    "i"   '(consult-imenu :which-key "Indices")
+    "."   '(find-file :which-key "Find file")
+    "f"   '(consult-flymake :which-key "Flymake")
+    "p p" '(find-file-in-project :which-key "Find file in project")
+    "p f" '(consult-git-grep :which-key "Grep in project")))
 #+end_src
 
 * Global controls 
@@ -139,104 +162,125 @@ I tend to use arrow keys and home/end/del/pgup/pgdn as a crutch and I want to le
 (general-def '(normal visual insert) "<next>" (lambda () (interactive) (message "Use (C-F) to go forwards")))
 #+end_src
 
-* Theming
-** Base16
-I use the Base16 theme system, with a custom theme, designed by yours truly. Base16 doesn't by default have colors for evil-mode state cursors, so let's add some simple overrides. We get the colors dynamically from the current theme variable set in previous block, so this works nicely even if you want to change themes.
+* GUI
+I use the Base16 theme system and provide a few overrides to make things slightly better for my personal use.
+
+Use Iosevka Term as the monospaced font, use Aile and Etoile for variable pitch mode, for example in org-mode body text and headers.
+
+** Customizations
+#+begin_src elisp
+(defun jzlfr/set-theme-overrides (theme-colors)
+  "Set overrides for some theme elements"
+  (let ((base00 (plist-get theme-colors :base00))
+        (base01 (plist-get theme-colors :base01))
+        (base02 (plist-get theme-colors :base02))
+        (base08 (plist-get theme-colors :base08))
+        (base09 (plist-get theme-colors :base09))
+        (base0B (plist-get theme-colors :base0B))
+        (base0D (plist-get theme-colors :base0D))
+        (base0E (plist-get theme-colors :base0E)))
+
+    ;; Setup evil mode cursors
+    (setq evil-emacs-state-cursor   `(,base0D box)
+          evil-insert-state-cursor  `(,base0D bar)
+          evil-motion-state-cursor  `(,base0E box)
+          evil-normal-state-cursor  `(,base0B box)
+          evil-replace-state-cursor `(,base08 bar)
+          evil-visual-state-cursor  `(,base09 box))
+
+    ;; Setup selection background color in vertico minibuffer
+    (set-face-attribute 'vertico-current nil :background base02)
+
+    ;; Default fonts
+    (set-face-attribute 'default nil :font "iosevka term ss14-11")   ;; Monospace font for default text
+    (set-face-attribute 'variable-pitch nil :font "iosevka aile-11") ;; Quasi-proportional font for body text
+
+    ;; Mode-line text
+    (custom-set-faces
+     '(mode-line ((t (:font "iosevka aile-8"))))
+     '(mode-line-inactive ((t (:font "iosevka aile-8")))))
+
+    ;; Org-mode header fonts
+    (set-face-attribute 'org-document-title nil :height 1.5 :weight 'bold :foreground base0E :font "iosevka etoile-16")
+    (set-face-attribute 'org-level-1        nil :height 1.4 :weight 'bold :foreground base0E :font "iosevka etoile-14")
+    (set-face-attribute 'org-level-2        nil :height 1.2 :weight 'bold :foreground base0E :font "iosevka etoile-13")
+    (set-face-attribute 'org-level-3        nil :height 1.1 :weight 'bold :foreground base0E :font "iosevka etoile-12")
+    (set-face-attribute 'org-level-4        nil :height 1.0 :weight 'bold :foreground base0E :font "iosevka etoile-11")
+
+    ;; Use monospace font (fixed-pitch) for many org-mode constructs
+    (set-face-attribute 'fixed-pitch nil :family "iosevka term ss14" :height 0.8)
+    (let ((org-fixed-pitch-faces '(org-block org-block-begin-line org-block-end-line org-code
+                                             org-document-info-keyword org-meta-line org-table
+                                             org-verbatim org-drawer org-special-keyword org-tag org-hide)))
+      (set-face-attribute 'org-hide nil :foreground base00)
+      (dolist (face org-fixed-pitch-faces)
+        (set-face-attribute face nil :inherit 'fixed-pitch)))
+
+    ;; Set org-habit theme for done/todo cells
+    (let ((habit-faces-done '(org-habit-clear-face org-habit-clear-future-face org-habit-ready-face org-habit-ready-future-face org-habit-alert-face org-habit-alert-future-face))
+          (habit-faces-todo '(org-habit-overdue-face org-habit-overdue-future-face)))
+      (dolist (face habit-faces-done)
+        (set-face-attribute face nil :background base02))
+      (dolist (face habit-faces-todo)
+        (set-face-attribute face nil :background base01))
+      ;; Highlight habits that can be done today
+      (set-face-attribute 'org-habit-ready-face nil :foreground base0B))))
+#+end_src
 
 #+begin_src elisp
 (use-package base16-theme
   :ensure t
-  :init
-  (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+  :after (org org-habit evil vertico)
+  :init (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
   :config
-  (load-theme 'base16-jarizleifr t))
-
-(defvar theme-colors base16-jarizleifr-colors)
-
-(defun get-theme-color (key)
-  "Get a color from set theme"
-  (plist-get theme-colors key))
-
-(setq evil-emacs-state-cursor   `(,(get-theme-color :base0D) box)
-      evil-insert-state-cursor  `(,(get-theme-color :base0D) bar)
-      evil-motion-state-cursor  `(,(get-theme-color :base0E) box)
-      evil-normal-state-cursor  `(,(get-theme-color :base0B) box)
-      evil-replace-state-cursor `(,(get-theme-color :base08) bar)
-      evil-visual-state-cursor  `(,(get-theme-color :base09) box))
+  (load-theme 'base16-jarizleifr t)
+  ;; When using daemon, set frame icon and fonts whenever new frame is created
+  (let ((colors base16-jarizleifr-colors))
+    (when (daemonp)
+      (add-hook 'after-make-frame-functions
+                (lambda (frame)
+                  (let ((frame-icon "/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/emacs.svg"))
+                    (set-frame-parameter (car (frame-list)) 'icon-type frame-icon)) ;; Set frame icon
+                  (with-selected-frame frame (jzlfr/set-theme-overrides colors))))) ;; Set overrides
+    ;; Make sure overrides are set on config reload as well
+    (jzlfr/set-theme-overrides colors)))
 #+end_src
 
-** Setup fonts
-Use Iosevka Term as the monospaced font, use Aile and Etoile for variable pitch mode, for example in org-mode.
-
-#+begin_src elisp
-;; Set default font
-(add-to-list 'default-frame-alist '(font . "iosevka term ss14-11" ))
-
-(defun jzlfr/set-font-faces ()
-  (set-face-attribute 'default nil :font "iosevka term ss14-11")
-  (set-face-attribute 'fixed-pitch nil :family "iosevka term ss14" :height 0.8)
-
-  ;; Mode-line text
-  (custom-set-faces
-   '(mode-line ((t (:font "iosevka aile-8"))))
-   '(mode-line-inactive ((t (:font "iosevka aile-8")))))
-
-  ;; Body text
-  (set-face-attribute 'variable-pitch nil :font "iosevka aile-11")
-
-  ;; Org-mode header fonts
-  (let ((title-color (get-theme-color :base0E)))
-    (set-face-attribute 'org-document-title nil :height 1.5 :weight 'bold :foreground title-color :font "iosevka etoile-16")
-    (set-face-attribute 'org-level-1 nil :height 1.4 :weight 'bold :foreground title-color :font "iosevka etoile-14")
-    (set-face-attribute 'org-level-2 nil :height 1.2 :weight 'bold :foreground title-color :font "iosevka etoile-13")
-    (set-face-attribute 'org-level-3 nil :height 1.1 :weight 'bold :foreground title-color :font "iosevka etoile-12")
-    (set-face-attribute 'org-level-4 nil :height 1.0 :weight 'bold :foreground title-color :font "iosevka etoile-11"))
-
-  ;; Use terminal font (fixed-pitch) for many org-mode constructs
-  (let ((org-fixed-pitch-faces '(org-block org-block-begin-line org-block-end-line org-code
-                                           org-document-info-keyword org-meta-line org-table
-                                           org-verbatim org-drawer org-special-keyword org-tag org-hide)))
-    (set-face-attribute 'org-hide nil :foreground (get-theme-color :base00))
-    (dolist (face org-fixed-pitch-faces)
-      (set-face-attribute face nil :inherit 'fixed-pitch))))
-
-;; When using daemon, set frame icon and fonts whenever new frame is created
-(when (daemonp)
-  (add-hook 'after-make-frame-functions
-            (lambda (frame)
-              (let ((frame-icon "/home/jarizleifr/.icons/jarizleifr_icons/apps/scalable/emacs.svg"))
-                (set-frame-parameter (car (frame-list)) 'icon-type frame-icon)) ;; Set frame icon
-              (with-selected-frame frame (jzlfr/set-font-faces)))))             ;; Set fonts
-
-;; Make sure fonts are set on config reload as well
-(jzlfr/set-font-faces)
-#+end_src
-
-** Modeline
-Include Doom Emacs modeline (status bar), which looks nice. Doom modeline requires the nerd-icons package, so make sure it's installed as well.
-
+** Icons
 #+begin_src elisp 
-(use-package nerd-icons
-  :ensure t)
+(use-package nerd-icons :ensure t)
 (use-package nerd-icons-dired
   :ensure t
   :after nerd-icons
   :config
   (add-hook 'dired-mode-hook 'nerd-icons-dired-mode))
+#+end_src
+
+** Modeline
+Include Doom Emacs modeline (status bar), which looks nice. Doom modeline requires the ~nerd-icons~ package.
+
+#+begin_src elisp 
 (use-package doom-modeline
   :ensure t
+  :after (nerd-icons find-file-in-project)
   :init
   (setq column-number-mode t                   ;; Enable column numbers in modeline
         doom-modeline-window-width-limit 70    ;; Make sure stuff like timers show up in half-screen setups
-        doom-modeline-project-detection 'ffip) ;; use ffip as projectile doesn't handle symlinks gracefully
+        doom-modeline-project-detection 'ffip) ;; use ffip
   (doom-modeline-mode 1))
 #+end_src
 
-** GUI tweaks
+** Minor tweaks
 Some miscellaneous tweaks and one-liners that don't necessarily warrant their own sections
 #+begin_src elisp
 ;; Show a custom title bar text
-(setq frame-title-format '(multiple-frames "%b" ("" "%b - Wyrd Emacs")))
+;; (setq frame-title-format '(multiple-frames "%b" ("" "%b - Wyrd Emacs")))
+
+(setq frame-title-format
+      '(:eval (if-let ((project (project-current)))
+                  (format "Project: %s - Wyrd Emacs" (project-name project))
+                "%b - Wyrd Emacs")))
+
 (global-visual-line-mode t)           ;; Enable visual line mode globally
 (setq ring-bell-function 'ignore)     ;; Disable bell sound
 (fringe-mode 0)                       ;; Disable fringes globally
@@ -258,6 +302,7 @@ Dashboard has some problems when running on daemonized Emacs. So we'll set ~init
         dashboard-set-file-icons t
         dashboard-banner-logo-title "Welcome back, Jarizleifr!"
         dashboard-startup-banner "~/.emacs.d/splash2.txt"
+        dashboard-projects-backend 'project-el
         dashboard-items '((projects  . 5)
                           (bookmarks . 5)
                           (recents   . 5)
@@ -306,48 +351,6 @@ Emacs clutters folders quite profusely with backup and temp files, this'll stuff
     auto-save-file-name-transforms `((".*" ,(expand-file-name "tmp/autosaves/" user-emacs-directory) t)))
 #+end_src
 
-* Project management
-** Projectile
-Projectile is a project interaction library, which makes dealing with complex projects a breeze. One can for example build, run and test projects by providing a configuration. I'm using Helm as my finder, so helm-projectile is setup here as well, which provides some glue between the two libraries.
-
-#+begin_src elisp
-(use-package projectile
-  :ensure t
-  :config
-  (setq projectile-completion-system 'helm
-        projectile-indexing-method 'alien)
-  (projectile-global-mode)
-  ;; Make projectile variables in .dir-locals.el safe
-  (put 'projectile-test-suffix-function 'safe-local-variable #'functionp)
-  :bind
-  (("<f5>" . projectile-run-project)
-   ("<f6>" . projectile-test-project)
-   ("<f8>" . projectile-compile-project))
-  :general
-  (nvmap :prefix "SPC"
-    "p p" '(projectile-find-file :which-key "Find files in project")
-    "p f" '(helm-projectile-ag :which-key "Search in project")
-    "p t" '(projectile-toggle-between-implementation-and-test :which-key "Toggle between implementation and test")))
-(use-package helm-projectile
-  :ensure t
-  :config
-  (helm-projectile-on))
-
-(defun jzlfr/projectile-project-find-function (dir)
-  (let ((root (projectile-project-root dir)))
-    (and root (cons 'transient root))))
-
-(projectile-mode t)
-
-(with-eval-after-load 'project
-  (add-to-list 'project-find-functions 'jzlfr/projectile-project-find-function))
-#+end_src
-
-** File search
-#+begin_src elisp
-(use-package helm-ag :ensure t)
-#+end_src
-
 * Org-mode
 Org-mode is pretty much the number one reason for why I use Emacs in the first place. It provides great facilities for note taking, journaling, visualizing data and doing all sorts of other interesting stuff like TODO tracking, scheduling and organizational tasks.
 
@@ -386,15 +389,6 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
         org-habit-show-all-today t
         org-habit-today-glyph ?‖
         org-habit-completed-glyph ?✓)
-  ;; Set org-habit theme for done/todo cells
-  (let ((habit-faces-done '(org-habit-clear-face org-habit-clear-future-face org-habit-ready-face org-habit-ready-future-face org-habit-alert-face org-habit-alert-future-face))
-        (habit-faces-todo '(org-habit-overdue-face org-habit-overdue-future-face)))
-    (dolist (face habit-faces-done)
-      (set-face-attribute face nil :background (get-theme-color :base02)))
-    (dolist (face habit-faces-todo)
-      (set-face-attribute face nil :background (get-theme-color :base01)))
-    ;; Highlight habits that can be done today
-    (set-face-attribute 'org-habit-ready-face nil :foreground (get-theme-color :base0B)))
   :hook
   ((org-mode) . variable-pitch-mode)
   :general
@@ -420,8 +414,6 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
     "n f" '(org-roam-node-find :which-key "Find org-roam Node")
     "n n" '(org-roam-node-insert :which-key "Insert org-roam Node")
     "n c" '(org-roam-node-insert :which-key "Capture org-roam Node"))
-  :hook 
-  ((org-mode) . helm-mode) ;; Make sure Helm is enabled in org-mode to get node completions
   :config
   (org-roam-db-sync))
 #+end_src
@@ -646,6 +638,11 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 #+end_src
 
 ** Programming helpers
+*** Smart dash
+#+begin_src elisp
+(use-package smart-dash
+  :ensure t)
+#+end_src
 *** Eldoc
 #+begin_src elisp
 (use-package eldoc-box
@@ -661,10 +658,8 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 *** Keybindings
 #+begin_src elisp
 (nvmap :prefix "SPC"
-  "c c" '(comment-line :which-key "Comment line")
-  "c r" '(comment-region :which-key "Comment region")
-  "f p" '(flymake-goto-prev-error :which-key "Goto previous error")
-  "f n" '(flymake-goto-next-error :which-key "Goto next error"))
+  ";"   '(comment-line :which-key "Comment line")
+  "'"   '(comment-indent :which-key "Add comment"))
 #+end_src
 
 *** YASnippet
@@ -678,7 +673,7 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 #+end_src
 
 *** Company-mode
-~company~ is a text completion framework, which will give symbol suggestions as you write code. ~company~ doesn't play nice with ~yasnippet~ out of the box, so we'll need to give it a little help.
+~company~ is an at-point text completion framework, which will give symbol suggestions as you write code. ~company~ doesn't play nice with ~yasnippet~ out of the box, so we'll need to give it a little help.
 
 #+begin_src elisp
 (defun company-yasnippet-or-completion ()

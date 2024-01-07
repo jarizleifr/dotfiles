@@ -29,6 +29,7 @@ export WINEPREFIX=/apps/jarizleifr/Wine
 
 autoload -U colors && colors
 
+# Setup git info
 autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%b'
@@ -56,3 +57,18 @@ alias cd..="cd .."
 alias e="emacsclient -nc"
 alias g="git"
 alias sd="cd ~ && cd \$(find -L * -type d | fzf)"
+
+# Setup current path and command in title bar
+[[ -t 1 ]] || return
+case $TERM in
+    *xterm*|*rxvt*|(dt|k|E|a)term)
+    preexec () {
+	print -Pn "\e]2;$(pwd) :: $1\a"
+    }
+    ;;
+    screen*)
+    preexec () {
+	print -Pn "\e\"$1\e\134"
+    }
+    ;;
+esac

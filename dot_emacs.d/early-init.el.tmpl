@@ -1,4 +1,4 @@
-;;; early-init.el -*- lexical-binding: t; -*-
+;; early-init.el -*- mode: emacs-lisp; lexical-binding: t; -*-
 
 ;; Set garbage collection threshold to 128MiB
 (defvar default-gc-cons-threshold 134217728)
@@ -6,6 +6,8 @@
       gc-cons-percentage 0.6) 
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold default-gc-cons-threshold)))
 
+;; Load default font 
+(add-to-list 'default-frame-alist '(font . "iosevka term ss14-11" ))
 ;; Prevent flashing of white background (value from skeletor theme)
 (set-face-attribute 'default nil :background "#{{ .base00 }}" :foreground "#{{ .base05 }}")
 
