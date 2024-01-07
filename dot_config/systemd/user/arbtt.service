@@ -1,0 +1,9 @@
+[Unit]
+Description=arbtt time tracking
+
+[Service]
+ExecStart=/usr/bin/arbtt-capture
+Restart=always
+
+[Install]
+WantedBy=default.target
