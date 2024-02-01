@@ -105,7 +105,26 @@ General provides a nice way to configure ~evil~-compatible keybindings with a ~:
 (use-package find-file-in-project
   :ensure t
   :config
+  ;; (setq ffip-strip-file-name-regex "\\(Tests\\|Impl\\|Repository\\|Controller\\)")
   (setq ffip-use-rust-fd t))
+#+end_src
+
+** Orderless
+#+begin_src elisp
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+** Marginalia
+Marginalia adds annotations to completion candidates depending on completion category. It tries to be smart about it, like giving docs for commands/functions as well as file info for file completions.
+#+begin_src elisp
+(use-package marginalia
+  :ensure t
+  :init
+  (marginalia-mode))
 #+end_src
 
 ** Vertico
@@ -114,12 +133,8 @@ Vertico is a completion framework, similar to Helm, Ivy, ~fido-vertical-mode~ et
 #+begin_src elisp
 (use-package vertico
   :ensure t
-  :after (consult find-file-in-project)
+  :after (consult find-file-in-project orderless)
   :init (vertico-mode)
-  :config
-  (setq completion-styles '(basic partial-completion emacs22 flex)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion))))
   :general
   (nvmap :keymaps 'override :prefix "SPC"
     "SPC" '(execute-extended-command :which-key "Command")
@@ -129,6 +144,7 @@ Vertico is a completion framework, similar to Helm, Ivy, ~fido-vertical-mode~ et
     "."   '(find-file :which-key "Find file")
     "f"   '(consult-flymake :which-key "Flymake")
     "p p" '(find-file-in-project :which-key "Find file in project")
+    "p r" '(find-file-with-similar-name :which-key "Find related file in project")
     "p f" '(consult-git-grep :which-key "Grep in project")))
 #+end_src
 
@@ -381,8 +397,8 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
         org-src-tab-acts-natively t
         org-src-window-setup 'current-window
         org-src-preserve-indentation t
-        ;; timer sound (32-bit float didn't work, 16-bit signed PCM did work)
-        org-clock-sound (expand-file-name "alarm.wav" user-emacs-directory))
+        ;; Org-clock
+        org-clock-sound (expand-file-name "alarm.wav" user-emacs-directory)) ;; timer sound (32-bit float didn't work, 16-bit signed PCM did work)
   ;; Setup org-habit
   (setq org-habit-graph-column 65
         org-habit-show-habits-only-for-today nil
@@ -398,8 +414,8 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
   (nvmap :prefix "SPC"
     "o a" '(org-agenda :which-key "Open org agenda")
     "o c" '(org-capture :which-key "Capture org note")
-    "t w" '((lambda () (interactive) (org-timer-set-timer 50)) :which-key "Set timer to WORK (50 min)") 
-    "t b" '((lambda () (interactive) (org-timer-set-timer 10)) :which-key "Set timer to BREAK (10 min)") 
+    "t w" '((lambda () (interactive) (org-timer-set-timer 52)) :which-key "Set timer to WORK (52 min)") 
+    "t b" '((lambda () (interactive) (org-timer-set-timer 17)) :which-key "Set timer to BREAK (17 min)") 
     "t p" '(org-timer-pause-or-continue :which-key "Pause or continue timer")))
 #+end_src
 
@@ -467,6 +483,13 @@ Setup directories and other general configuration and load up org-habit module.
   ((c-mode) . tree-sitter-hl-mode))
 (use-package tree-sitter-langs :ensure t)
 #+end_src
+*** Smart Parens
+Originally used only for Lisps, but ~smartparens~ is useful enough to many other languages as well. It improvs handling of parens pairs and tries to be smart about it.
+#+begin_src elisp
+(use-package smartparens
+  :ensure t
+  :hook ((java-mode emacs-lisp-mode fennel-mode lisp-mode) . smartparens-mode))
+#+end_src
 *** Lua
 #+begin_src elisp
 (use-package lua-mode :ensure t)
@@ -528,6 +551,15 @@ Setup directories and other general configuration and load up org-habit module.
 #+begin_src elisp
 (add-to-list 'auto-mode-alist '("/meson.build\\'" . python-mode))
 #+end_src
+*** Java
+#+begin_src elisp
+(add-hook 'java-mode-hook (lambda ()
+                            (set-fill-column 100)
+                            (display-fill-column-indicator-mode)
+                            (setq c-basic-offset 2
+                                  tab-width 2
+                                  indent-tabs-mode nil)))
+#+end_src
 *** C/C++
 #+begin_src elisp
 (add-hook 'c-mode-hook (lambda ()
@@ -540,16 +572,12 @@ Setup directories and other general configuration and load up org-habit module.
 All Lisps benefit from a selection of packages, as they share same structure.
 
 - ~rainbow-delimiters~ :: Assigns colors to parens depending on nesting depth. Great for visualizing where things start and where they end.
-- ~smartparens~ :: Improves handling of parens pairs and there are a LOT of parens with Lisps.
 - ~aggressive-indent~ :: Indents code depending on its immediate surroundings. In general, this makes things much more readable.
 
 #+begin_src elisp
 (use-package rainbow-delimiters
   :ensure t
   :hook ((emacs-lisp-mode fennel-mode lisp-mode) . rainbow-delimiters-mode))
-(use-package smartparens
-  :ensure t
-  :hook ((emacs-lisp-mode fennel-mode lisp-mode) . smartparens-mode))
 (use-package aggressive-indent
   :ensure t
   :hook ((emacs-lisp-mode fennel-mode lisp-mode) . aggressive-indent-mode))
@@ -603,7 +631,7 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 (use-package eglot
   :ensure t
   :hook
-  ((csharp-mode typescript-mode typescript-react-mode c-mode c++-mode zig-mode lua-mode nim-mode) . eglot-ensure)
+  ((csharp-mode typescript-mode typescript-react-mode c-mode c++-mode (java-mode java-ts-mode) zig-mode lua-mode nim-mode) . eglot-ensure)
   ((csharp-mode typescript-mode typescript-react-mode) . (lambda () (add-hook 'before-save-hook 'eglot-format nil 'local)))
   :config
   ;; We want to stop eglot from managing flymake, since we use flymake-eslint for TypeScript/React projects
@@ -614,19 +642,28 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
   ;; Disable inlay hints by default as it breaks line widths. Enable it with "SPC e i", if needed
   (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
   (setq eglot-server-programs
-        (append eglot-server-programs
-                '((c-mode . ("clangd"))
-                  (c++-mode . ("clangd"))
-                  (fennel-mode . ("fennel-ls" :initializationOptions
-                                  (:fennel-ls (:fennel-path "./fennel/?.fnl;./fennel/?/?.fnl"
-                                               :macro-path "./fennel/macros.fnl;macros.fnl;./macros.fnl;../macros.fnl"))))
-                  (zig-mode . ("zls"))
-                  (nim-mode . ("nimlsp"))
-                  (rust-mode . ("rust-analyzer"))
-                  (csharp-mode . ("omnisharp" "-lsp"))
-                  (lua-mode . ("lua-language-server"))
-                  (typescript-mode . ("typescript-language-server" "--stdio"))
-                  (typescript-react-mode . ("typescript-language-server" "--stdio")))))
+        ;; We want to have custom overrides first, otherwise multi-modes use defaults and not specified ones
+        (append 
+         '((c-mode . ("clangd"))
+           (c++-mode . ("clangd"))
+           (fennel-mode . ("fennel-ls" :initializationOptions
+                           (:fennel-ls (:fennel-path "./fennel/?.fnl;./fennel/?/?.fnl"
+                                        :macro-path  "./fennel/macros.fnl;macros.fnl;./macros.fnl;../macros.fnl"))))
+           ;; NOTE: If for any reason Lombok stops working, check eglot event buffer and see that args are indeed
+           ;; sent to "jdtls", this has bitten my ass before and took long time to figure out.
+           ((java-mode java-ts-mode) . ("jdtls" "--jvm-arg=-javaagent:/home/jarizleifr/.local/bin/lombok.jar"))
+           ;; ((java-mode java-ts-mode) . ("jdtls" :initializationOptions
+           ;;                              (:settings
+           ;;                               (:java
+           ;;                                (:jdt (:ls (:lombokSupport t)))))))
+           (zig-mode . ("zls"))
+           (nim-mode . ("nimlsp"))
+           (rust-mode . ("rust-analyzer"))
+           (csharp-mode . ("omnisharp" "-lsp"))
+           (lua-mode . ("lua-language-server"))
+           (typescript-mode . ("typescript-language-server" "--stdio"))
+           (typescript-react-mode . ("typescript-language-server" "--stdio")))
+         eglot-server-programs))
   :general
   (nvmap :keywords 'eglot-mode-map :prefix "SPC"
     "e f" '(eglot-format :which-key "Eglot format")
@@ -694,6 +731,7 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
   :hook
   ((csharp-mode
     fennel-mode
+    java-mode
     rust-mode
     zig-mode
     c-mode
@@ -702,4 +740,28 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
     typescript-mode
     typescript-react-mode)
    . company-mode))
+#+end_src
+
+* Projects
+#+begin_src elisp
+(defvar jzlfr/project-run-command nil)
+(defun jzlfr/project-run ()
+  (interactive)
+  (setq-local compile-command jzlfr/project-run-command)
+  (project-compile))
+(defvar jzlfr/project-test-command nil)
+(defun jzlfr/project-test ()
+  (interactive)
+  (setq-local compile-command (concat jzlfr/project-test-command " --tests " buffer-file-truename))
+  (project-compile))
+(global-set-key (kbd "<f5>") 'jzlfr/project-run)
+(global-set-key (kbd "<f6>") 'jzlfr/project-test)
+#+end_src
+
+Here's an example .dir-locals.el for project work:
+#+begin_src elisp
+;; Do not leave this uncommented in config.org!
+;; Java + ffip
+;; ((nil . ((eval . (progn
+;;                   (setq ffip-strip-file-name-regex "\\(Tests\\|Impl\\|Repository\\|Controller\\)"))))))
 #+end_src
