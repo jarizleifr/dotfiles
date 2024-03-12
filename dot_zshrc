@@ -21,11 +21,26 @@ export WINEPREFIX=/apps/jarizleifr/Wine
 # export WINEARCH=win64
 # export WINEPREFIX=~/Apps/Wine64
 
-# source /usr/share/nvm/init-nvm.sh
-
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+lazy_load_nvm() {
+    unset -f npm node nvm
+    export NVM_DIR="$HOME/.nvm"
+    # This loads nvm
+    [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+    # This loads nvm bash_completion
+    [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+}
+npm() {
+    lazy_load_nvm
+    npm $@
+}
+node() {
+    lazy_load_nvm
+    node $@
+}
+nvm() {
+    lazy_load_nvm
+    nvm $@
+}
 
 autoload -U colors && colors
 

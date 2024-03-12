@@ -31,6 +31,12 @@ The config is set to always install use-package if its missing.
 *** Shell environment
 #+begin_src elisp
 (use-package exec-path-from-shell :ensure t)
+
+(defun sudo-shell-command (command)
+  (interactive "MShell command (root): ")
+  (with-temp-buffer
+    (cd "/sudo::/")
+    (async-shell-command command)))
 #+end_src
 
 * Commands
@@ -108,6 +114,23 @@ General provides a nice way to configure ~evil~-compatible keybindings with a ~:
   (setq ffip-use-rust-fd t))
 #+end_src
 
+** Marginalia
+#+begin_src elisp
+(use-package marginalia
+  :ensure t
+  :init
+  (marginalia-mode))
+#+end_src
+
+** Orderless
+#+begin_src elisp
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
 ** Vertico
 Vertico is a completion framework, similar to Helm, Ivy, ~fido-vertical-mode~ etc. I used to use Helm, but moved to Vertico in 2024.
 
@@ -116,10 +139,6 @@ Vertico is a completion framework, similar to Helm, Ivy, ~fido-vertical-mode~ et
   :ensure t
   :after (consult find-file-in-project)
   :init (vertico-mode)
-  :config
-  (setq completion-styles '(basic partial-completion emacs22 flex)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion))))
   :general
   (nvmap :keymaps 'override :prefix "SPC"
     "SPC" '(execute-extended-command :which-key "Command")
@@ -194,6 +213,8 @@ Use Iosevka Term as the monospaced font, use Aile and Etoile for variable pitch 
     ;; Default fonts
     (set-face-attribute 'default nil :font "iosevka term ss14-11")   ;; Monospace font for default text
     (set-face-attribute 'variable-pitch nil :font "iosevka aile-11") ;; Quasi-proportional font for body text
+    (set-fontset-font "fontset-default" 'han (font-spec :family "Sarasa Gothic" :size nil))
+    (set-fontset-font "fontset-default" 'kana (font-spec :family "Sarasa Gothic" :size nil))
 
     ;; Mode-line text
     (custom-set-faces
@@ -201,11 +222,11 @@ Use Iosevka Term as the monospaced font, use Aile and Etoile for variable pitch 
      '(mode-line-inactive ((t (:font "iosevka aile-8")))))
 
     ;; Org-mode header fonts
-    (set-face-attribute 'org-document-title nil :height 1.5 :weight 'bold :foreground base0E :font "iosevka etoile-16")
-    (set-face-attribute 'org-level-1        nil :height 1.4 :weight 'bold :foreground base0E :font "iosevka etoile-14")
-    (set-face-attribute 'org-level-2        nil :height 1.2 :weight 'bold :foreground base0E :font "iosevka etoile-13")
-    (set-face-attribute 'org-level-3        nil :height 1.1 :weight 'bold :foreground base0E :font "iosevka etoile-12")
-    (set-face-attribute 'org-level-4        nil :height 1.0 :weight 'bold :foreground base0E :font "iosevka etoile-11")
+    (set-face-attribute 'org-document-title nil :height 1.5 :weight 'bold :foreground base0E :family "iosevka etoile")
+    (set-face-attribute 'org-level-1        nil :height 1.4 :weight 'bold :foreground base0E :family "iosevka etoile")
+    (set-face-attribute 'org-level-2        nil :height 1.2 :weight 'bold :foreground base0E :family "iosevka etoile")
+    (set-face-attribute 'org-level-3        nil :height 1.1 :weight 'bold :foreground base0E :family "iosevka etoile")
+    (set-face-attribute 'org-level-4        nil :height 1.0 :weight 'bold :foreground base0E :family "iosevka etoile")
 
     ;; Use monospace font (fixed-pitch) for many org-mode constructs
     (set-face-attribute 'fixed-pitch nil :family "iosevka term ss14" :height 0.8)
@@ -373,9 +394,15 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
         org-hidden-keywords '(author date email title)
         ;; org-agenda
         org-agenda-window-setup 'current-window
-        org-agenda-files (list (expand-file-name "journal.org" org-directory)
-                               (expand-file-name "habits.org"  org-directory)
-                               (expand-file-name "work.org"    org-directory))
+        org-agenda-files (list (expand-file-name "journal.org"  org-directory)
+                               (expand-file-name "habits.org"   org-directory)
+                               (expand-file-name "exercise.org" org-directory))
+        org-tags-column 0
+        org-agenda-tags-column -85
+        org-agenda-sorting-strategy '((agenda tag-down habit-down time-up priority-down category-keep)
+                                      (todo priority-down category-keep)
+                                      (tags priority-down category-keep)
+                                      (search category-keep))
         ;; Org source block config
         org-src-fontify-natively t
         org-src-tab-acts-natively t
@@ -384,8 +411,8 @@ Org-mode is pretty much the number one reason for why I use Emacs in the first p
         ;; timer sound (32-bit float didn't work, 16-bit signed PCM did work)
         org-clock-sound (expand-file-name "alarm.wav" user-emacs-directory))
   ;; Setup org-habit
-  (setq org-habit-graph-column 65
-        org-habit-show-habits-only-for-today nil
+  (setq org-habit-graph-column 45
+        org-habit-show-habits-only-for-today t
         org-habit-show-all-today t
         org-habit-today-glyph ?‖
         org-habit-completed-glyph ?✓)
@@ -458,49 +485,80 @@ Setup directories and other general configuration and load up org-habit module.
 #+end_src
 
 ** Advanced language support
+*** Compilation buffer
+#+begin_src elisp
+(setq compilation-scroll-output t)
+(setq compilation-hidden-output '("^(skipping.*)\n"))
+(add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 2)))
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+(add-hook 'compilation-filter-hook 'comint-truncate-buffer)
+(setq comint-buffer-maximum-size 1000)
+#+end_src
 *** Tree-sitter
+While tree sitter is now included in Emacs, it doesn't do code highlighting in a satisfactory manner. So for now, I'll need to still include ~tree-sitter~ as well, for the highlighting mode. This is not ideal and causes redundancy, but it seems to work for now.
 #+begin_src elisp
 (use-package tree-sitter
   :ensure t
+  :config (add-to-list 'tree-sitter-major-mode-language-alist '(js-ts-mode . javascript))
   :hook
-  ((c-mode) . tree-sitter-mode)
-  ((c-mode) . tree-sitter-hl-mode))
-(use-package tree-sitter-langs :ensure t)
+  ((c-mode) . tree-sitter-hl-mode)
+  ((js-ts-mode) . tree-sitter-hl-mode))
+(use-package tree-sitter-langs
+  :ensure t)
 #+end_src
 *** Lua
 #+begin_src elisp
 (use-package lua-mode :ensure t)
 #+end_src
-*** TypeScript
+*** JavaScript/TypeScript
 #+begin_src elisp
-(use-package flymake-eslint :ensure t)
+(add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . js-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts?\\'"    . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx?\\'"   . tsx-ts-mode))
+
+;; JavaScript formatting in Eglot
+(add-hook 'js-ts-mode-hook
+          (lambda () (setq indent-tabs-mode nil
+                           tab-width 2)))
+;; TypeScript formatting in Eglot
+(add-hook 'typescript-ts-mode-hook
+          (lambda () (setq indent-tabs-mode nil
+                           tab-width 2)))
+;; TypeScript TSX formatting in Eglot
+(add-hook 'tsx-ts-mode-hook
+          (lambda () (setq indent-tabs-mode nil
+                           tab-width 2)))
+
+(use-package flymake-eslint
+  :ensure t
+  :after eglot
+  :custom
+  (flymake-eslint-executable-name "eslint_d")
+  :hook
+  (eglot-managed-mode . (lambda ()
+                          (when (derived-mode-p 'js-ts-mode 'typescript-ts-mode 'tsx-ts-mode)
+                                     (flymake-eslint-enable)))))
 (use-package eslint-fix :ensure t)
 (use-package eslintd-fix :ensure t)
-(use-package typescript-mode
-  :ensure t
-  :mode "\\.ts\\'"
-  :config
-  (add-hook 'typescript-mode-hook (lambda () (flymake-eslint-enable)))
-  :general
-  (nvmap :keymaps 'typescript-mode-map :prefix "SPC"
-    "f f" '(eslint-fix :which-key "Format buffer")))
-#+end_src
-*** Web languages (HTML/CSS/React)
-~web-mode~ is a somewhat fickle beast, especially when combined with React and TypeScript. Usually TypeScript React projects will use ~eglot~ for general IntelliSense, but ~eslint~ for formatting and error checking.
 
+#+end_src
+
+**** NVM (Node Version Manager)
 #+begin_src elisp
-(use-package web-mode
+(use-package nvm
   :ensure t
-  :mode (("\\.js\\'" . web-mode)
-         ("\\.tsx\\'" . typescript-react-mode))
-  :init
-  (define-derived-mode typescript-react-mode web-mode "React TypeScript")
   :config
-  (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
-  (add-hook 'typescript-react-mode-hook (lambda () (flymake-eslint-enable)))
-  :general
-  (nvmap :keymaps 'typescript-react-mode-map :prefix "SPC"
-    "f f" '(eslint-fix :which-key "Format buffer")))
+  (nvm-use "20"))
+
+(defun jzlfr/nvm-use (version)
+  (interactive "sVersion: ")
+  (nvm-use version)
+  (exec-path-from-shell-copy-env "PATH"))
+#+end_src
+
+*** Web languages (HTML/CSS)
+#+begin_src elisp
+(use-package web-mode :ensure t)
 #+end_src
 *** JSON
 #+begin_src elisp
@@ -513,7 +571,10 @@ Setup directories and other general configuration and load up org-habit module.
 *** Nim
 #+begin_src elisp
 (use-package nim-mode
-  :ensure t)
+  :ensure t
+  :hook ((nim-mode) . (lambda ()
+                        (electric-indent-local-mode 0)
+                        (auto-fill-mode 0))))
 #+end_src
 *** Zig
 #+begin_src elisp
@@ -603,30 +664,35 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
 (use-package eglot
   :ensure t
   :hook
-  ((csharp-mode typescript-mode typescript-react-mode c-mode c++-mode zig-mode lua-mode nim-mode) . eglot-ensure)
-  ((csharp-mode typescript-mode typescript-react-mode) . (lambda () (add-hook 'before-save-hook 'eglot-format nil 'local)))
+  ((js-ts-mode typescript-ts-mode tsx-mode) . eglot-ensure)
+  ((csharp-mode c-mode c++-mode java-mode zig-mode lua-mode nim-mode) . eglot-ensure)
   :config
-  ;; We want to stop eglot from managing flymake, since we use flymake-eslint for TypeScript/React projects
-  ;; (setq eglot-stay-out-of '(flymake))
-  ;; (add-hook 'eglot--managed-mode-hook
-  ;; 	    (lambda () (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend nil t)))
-
   ;; Disable inlay hints by default as it breaks line widths. Enable it with "SPC e i", if needed
   (add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
-  (setq eglot-server-programs
-        (append eglot-server-programs
-                '((c-mode . ("clangd"))
-                  (c++-mode . ("clangd"))
-                  (fennel-mode . ("fennel-ls" :initializationOptions
-                                  (:fennel-ls (:fennel-path "./fennel/?.fnl;./fennel/?/?.fnl"
-                                               :macro-path "./fennel/macros.fnl;macros.fnl;./macros.fnl;../macros.fnl"))))
-                  (zig-mode . ("zls"))
-                  (nim-mode . ("nimlsp"))
-                  (rust-mode . ("rust-analyzer"))
-                  (csharp-mode . ("omnisharp" "-lsp"))
-                  (lua-mode . ("lua-language-server"))
-                  (typescript-mode . ("typescript-language-server" "--stdio"))
-                  (typescript-react-mode . ("typescript-language-server" "--stdio")))))
+  :custom
+  (eglot-server-programs
+   '((c-mode . ("clangd"))
+     (c++-mode . ("clangd"))
+     (java-mode
+      . ("jdtls" :initializationOptions
+         (:settings
+          (:java
+           (:configuration
+            (:runtimes [(:name "JavaSE-1.8"  :path "/usr/lib/jvm/java-8-openjdk")
+                        (:name "JavaSE-17" :path "/usr/lib/jvm/java-17-openjdk" :default t)]))))))
+     (fennel-mode
+      . ("fennel-ls" :initializationOptions
+         (:fennel-ls (:fennel-path
+                      "./fennel/?.fnl;./fennel/?/?.fnl"
+                      :macro-path
+                      "./fennel/macros.fnl;macros.fnl;./macros.fnl;../macros.fnl"))))
+     (zig-mode . ("zls"))
+     (nim-mode . ("nimlsp"))
+     (rust-mode . ("rust-analyzer"))
+     (csharp-mode . ("omnisharp" "-lsp"))
+     (lua-mode . ("lua-language-server"))
+     ((js-ts-mode typescript-ts-mode tsx-ts-mode)
+      . ("typescript-language-server" "--stdio"))))
   :general
   (nvmap :keywords 'eglot-mode-map :prefix "SPC"
     "e f" '(eglot-format :which-key "Eglot format")
@@ -634,7 +700,15 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
     "e a" '(eglot-code-actions :which-key "Eglot code actions")
     "e o" '(eglot-code-action-organize-imports :which-key "Eglot organize imports")
     "e r" '(eglot-rename :which-key "Eglot rename")
-    "e i" '(eglot-inlay-hints-mode :which-key "Eglot toggle inlay hints")))
+    "e i" '(eglot-inlay-hints-mode :which-key "Eglot toggle inlay hints"))
+  (nvmap :keymaps 'nim-mode-map :prefix "SPC"
+    "e f" '((lambda () (interactive)
+              (when (buffer-file-name)
+                (save-buffer)
+                (shell-command
+                 (format "timeout 5 nimpretty %s" (shell-quote-argument (buffer-file-name))))
+                (revert-buffer t t)))
+            :which-key "Nimpretty buffer")))
 #+end_src
 
 ** Programming helpers
@@ -687,19 +761,33 @@ Eglot is a language server protocol client, which can provide all sorts of IDE-l
   :config
   (setq company-idle-delay 0
 	      company-minimum-prefix-length 1)
-  (add-hook 'company-mode-hook (lambda ()
-                                 (substitute-key-definition 'company-complete-common
-                                                            'company-yasnippet-or-completion
-                                                            company-active-map)))
+  (add-hook 'company-mode-hook
+            (lambda ()
+              (substitute-key-definition 'company-complete-common
+                                         'company-yasnippet-or-completion
+                                         company-active-map)))
   :hook
-  ((csharp-mode
-    fennel-mode
-    rust-mode
-    zig-mode
-    c-mode
-    c++-mode
-    lua-mode
-    typescript-mode
-    typescript-react-mode)
-   . company-mode))
+  ((js-ts-mode typescript-ts-mode tsx-ts-mode) . company-mode)
+  ((lua-mode fennel-mode) . company-mode)
+  ((csharp-mode nim-mode java-mode) . company-mode)
+  ((c-mode c++-mode rust-mode zig-mode) . company-mode))
+#+end_src
+
+* Projects
+
+#+begin_src elisp
+(defvar jzlfr/project-run-cmd)
+
+(defun jzlfr/project-compile-with-cmd (cmd)
+  (setq-local compile-command cmd)
+  (project-compile))
+
+(defun jzlfr/project-run ()
+  (interactive)
+  (jzlfr/project-compile-with-cmd jzlfr/project-run-cmd))
+(global-set-key (kbd "<f5>") 'jzlfr/project-run)
+(defun jzlfr/project-test ()
+  (interactive)
+  (jzlfr/project-compile-with-cmd jzlfr/project-test-cmd))
+(global-set-key (kbd "<f6>") 'jzlfr/project-test)
 #+end_src
